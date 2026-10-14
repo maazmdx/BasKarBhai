@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    <!-- Card Frame -->
+    <path
+        android:fillColor="#1F242C"
+        android:pathData="M16,16 h168 a16,16 0 0 1 16,16 v136 a16,16 0 0 1 -16,16 h-168 a16,16 0 0 1 -16,-16 v-136 a16,16 0 0 1 16,-16 z"/>
+    <!-- Stop Hand Sign (Ruko Jara) -->
+    <path
+        android:fillColor="#FF5722"
+        android:pathData="M80,60 h10 v40 h-10 z M95,50 h10 v50 h-10 z M110,55 h10 v45 h-10 z M125,65 h10 v35 h-10 z M65,85 h15 v20 h-15 z M75,100 c0,25 20,45 45,45 s35,-15 35,-35 v-20 h-50 z"/>
+    <!-- Glow Outline -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M60,155 h80 v10 h-80 z"/>
+</vector>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Dark Theme Backgrounds -->
+    <color name="bg_dark_primary">#0B0E14</color>
+    <color name="bg_dark_card">#161B22</color>
+    <color name="bg_dark_card_stroke">#30363D</color>
+    <color name="bg_dark_card_elevated">#1F242C</color>
+
+    <!-- Brand / Neon Accents -->
+    <color name="flame_orange">#FF5722</color>
+    <color name="flame_orange_bright">#FF3D00</color>
+    <color name="accent_amber">#FFAB00</color>
+    <color name="accent_green">#00E676</color>
+    <color name="accent_red">#FF1744</color>
+    <color name="accent_purple">#7C4DFF</color>
+    <color name="accent_cyan">#00E5FF</color>
+
+    <!-- Text Palette -->
+    <color name="text_primary">#F0F6FC</color>
+    <color name="text_secondary">#8B949E</color>
+    <color name="text_muted">#6E7681</color>
+    <color name="text_accent">#FFA726</color>
+
+    <!-- HUD Overlay Palette -->
+    <color name="hud_bg_glass">#D912161F</color>
+    <color name="hud_border">#55FF6D00</color>
+    <color name="hud_badge_bg">#33FF5722</color>
+
+    <!-- Modal Dim & Surfaces -->
+    <color name="modal_scrim">#E605070A</color>
+    <color name="modal_surface">#1A1E29</color>
+    <color name="modal_stroke">#40FF5722</color>
+
+    <!-- Material Primary/Secondary mappings -->
+    <color name="primary">#FF6D00</color>
+    <color name="on_primary">#000000</color>
+    <color name="secondary">#00E5FF</color>
+    <color name="on_secondary">#000000</color>
+    <color name="surface">#161B22</color>
+    <color name="on_surface">#F0F6FC</color>
+</resources>

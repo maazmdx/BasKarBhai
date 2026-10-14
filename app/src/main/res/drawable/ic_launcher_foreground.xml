@@ -1,0 +1,22 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Outer Shield / Circle -->
+    <path
+        android:fillColor="#1F242C"
+        android:pathData="M54,18 C73.88,18 90,34.12 90,54 C90,73.88 73.88,90 54,90 C34.12,90 18,73.88 18,54 C18,34.12 34.12,18 54,18 Z"/>
+    <!-- Flame Accent -->
+    <path
+        android:fillColor="#FF5722"
+        android:pathData="M57,32s1.5,5.3 1.5,9.6c0,4.12 -2.7,7.46 -6.82,7.46c-4.14,0 -7.26,-3.34 -7.26,-7.46l0.06,-0.72C39.4,45.68 37,51.88 37,58.66c0,8.84 7.16,16 16,16s16,-7.16 16,-16C69,47.88 64.82,38.26 57,32z"/>
+    <!-- Inner Core Flame -->
+    <path
+        android:fillColor="#FFD600"
+        android:pathData="M53.4,68.66c-3.56,0 -6.44,-2.8 -6.44,-6.28c0,-3.24 2.1,-5.52 5.62,-6.24c3.54,-0.72 7.2,-2.42 9.24,-5.16c0.78,2.58 1.18,5.3 1.18,8.08C63,64.38 58.7,68.66 53.4,68.66z"/>
+    <!-- Subtle Stop Hand / Reel Badge -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M50,42 h8 v4 h-8 z M50,48 h8 v4 h-8 z"/>
+</vector>

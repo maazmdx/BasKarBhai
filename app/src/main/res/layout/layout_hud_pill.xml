@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/hudRootLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_hud_pill"
+    android:gravity="center_vertical"
+    android:elevation="8dp"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Flame / mdx Engine Icon -->
+    <ImageView
+        android:id="@+id/hudFlameIcon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:src="@drawable/ic_flame"
+        android:contentDescription="@string/app_name"
+        android:layout_marginEnd="6dp" />
+
+    <!-- Reel Counter -->
+    <TextView
+        android:id="@+id/tvReelCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="📜 0 Reels"
+        android:textColor="@color/text_primary"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-medium" />
+
+    <!-- Separator -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="  |  "
+        android:textColor="@color/text_secondary"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <!-- Timer -->
+    <TextView
+        android:id="@+id/tvActiveTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="⏱️ 00:00"
+        android:textColor="@color/accent_cyan"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-medium" />
+
+    <!-- Subtle author tag indicator -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" • mdx"
+        android:textColor="#80FF5722"
+        android:textSize="9sp"
+        android:textStyle="bold"
+        android:layout_marginStart="4dp" />
+</LinearLayout>

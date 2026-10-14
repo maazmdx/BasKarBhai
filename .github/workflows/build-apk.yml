@@ -1,0 +1,83 @@
+name: Build BasKarBhai Debug APK
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: 🔨 Compile APK (Engineered by mdx)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: ☕ Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: 📱 Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: 🔑 Grant Execute Permission for Gradlew
+        run: chmod +x gradlew
+
+      - name: 🛠️ Assemble Debug APK
+        run: ./gradlew assembleDebug --stacktrace --no-daemon
+
+      - name: 🔍 Verify & Hash Generated APK
+        id: verify_apk
+        run: |
+          APK_PATH="app/build/outputs/apk/debug/app-debug.apk"
+          if [ -f "$APK_PATH" ]; then
+            FILE_SIZE=$(ls -lh "$APK_PATH" | awk '{print $5}')
+            SHA256=$(sha256sum "$APK_PATH" | awk '{print $1}')
+            echo "apk_exists=true" >> $GITHUB_OUTPUT
+            echo "apk_size=$FILE_SIZE" >> $GITHUB_OUTPUT
+            echo "apk_sha=$SHA256" >> $GITHUB_OUTPUT
+            echo "=========================================="
+            echo " BasKarBhai APK Successfully Compiled!"
+            echo " Author Tag: mdx"
+            echo " Size: $FILE_SIZE"
+            echo " SHA-256: $SHA256"
+            echo " Path: $APK_PATH"
+            echo "=========================================="
+          else
+            echo "Error: APK not found at $APK_PATH"
+            exit 1
+          fi
+
+      - name: 📦 Upload BasKarBhai APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BasKarBhai-APK
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: 📋 Generate Step Summary
+        run: |
+          echo "### 🚀 BasKarBhai APK Build Succeeded!" >> $GITHUB_STEP_SUMMARY
+          echo "**Architected & Crafted by:** \`mdx\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|---|" >> $GITHUB_STEP_SUMMARY
+          echo "| **Package** | \`com.baskarbhai.roast\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Target SDK** | \`34\` (Android 14) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Min SDK** | \`26\` (Android 8.0) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Artifact Name** | \`BasKarBhai-APK\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **APK Size** | \`${{ steps.verify_apk.outputs.apk_size }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **SHA256 Checksum** | \`${{ steps.verify_apk.outputs.apk_sha }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "> 💡 **Installation Tip for Android 13+:** Sideloaded accessibility apps require unlocking *Restricted Settings* (App Info -> Three Dots -> Allow Restricted Settings)." >> $GITHUB_STEP_SUMMARY
