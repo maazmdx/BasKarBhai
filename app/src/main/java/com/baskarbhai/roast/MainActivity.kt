@@ -146,18 +146,25 @@ class MainActivity : AppCompatActivity() {
         binding.tvFooterCredits.setOnClickListener(authorClick)
     }
 
+    private data class PresetThresholds(
+        val t1Reels: Int, val t1Mins: Int,
+        val t2Reels: Int, val t2Mins: Int,
+        val t3Reels: Int, val t3Mins: Int,
+        val t4Reels: Int, val t4Mins: Int
+    )
+
     private fun applyPreset(presetType: String) {
-        val (t1R, t1M, t2R, t2M, t3R, t3M, t4R, t4M) = when (presetType) {
-            "strict" -> listOf(5, 3, 10, 6, 15, 10, 20, 15)
-            "relaxed" -> listOf(20, 10, 40, 20, 60, 30, 80, 45)
-            else -> listOf(10, 5, 25, 12, 40, 20, 60, 30) // balanced
+        val preset = when (presetType) {
+            "strict" -> PresetThresholds(5, 3, 10, 6, 15, 10, 20, 15)
+            "relaxed" -> PresetThresholds(20, 10, 40, 20, 60, 30, 80, 45)
+            else -> PresetThresholds(10, 5, 25, 12, 40, 20, 60, 30) // balanced
         }
 
         val defaults = TierConfig.getDefaultTiers()
-        PreferencesManager.saveTierConfig(defaults[0].copy(defaultReelThreshold = t1R, defaultMinuteThreshold = t1M))
-        PreferencesManager.saveTierConfig(defaults[1].copy(defaultReelThreshold = t2R, defaultMinuteThreshold = t2M))
-        PreferencesManager.saveTierConfig(defaults[2].copy(defaultReelThreshold = t3R, defaultMinuteThreshold = t3M))
-        PreferencesManager.saveTierConfig(defaults[3].copy(defaultReelThreshold = t4R, defaultMinuteThreshold = t4M))
+        PreferencesManager.saveTierConfig(defaults[0].copy(defaultReelThreshold = preset.t1Reels, defaultMinuteThreshold = preset.t1Mins))
+        PreferencesManager.saveTierConfig(defaults[1].copy(defaultReelThreshold = preset.t2Reels, defaultMinuteThreshold = preset.t2Mins))
+        PreferencesManager.saveTierConfig(defaults[2].copy(defaultReelThreshold = preset.t3Reels, defaultMinuteThreshold = preset.t3Mins))
+        PreferencesManager.saveTierConfig(defaults[3].copy(defaultReelThreshold = preset.t4Reels, defaultMinuteThreshold = preset.t4Mins))
 
         val label = when (presetType) {
             "strict" -> "Strict (5 Reels / 3m)"
