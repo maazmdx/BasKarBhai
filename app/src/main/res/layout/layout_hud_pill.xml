@@ -10,7 +10,7 @@
     android:clickable="true"
     android:focusable="true">
 
-    <!-- Flame / mdx Engine Icon -->
+    <!-- Flame Icon -->
     <ImageView
         android:id="@+id/hudFlameIcon"
         android:layout_width="16dp"
@@ -50,11 +50,11 @@
         android:textStyle="bold"
         android:fontFamily="sans-serif-medium" />
 
-    <!-- Subtle author tag indicator -->
+    <!-- Author tag indicator -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" • mdx"
+        android:text=" • maazmdx"
         android:textColor="#80FF5722"
         android:textSize="9sp"
         android:textStyle="bold"

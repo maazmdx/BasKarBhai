@@ -43,7 +43,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="mdx shield"
+                android:text="maazmdx shield"
                 android:textColor="@color/text_muted"
                 android:textSize="10sp"
                 android:textStyle="bold" />
@@ -81,7 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Bhai kya kar raha hai tu?"
+            android:text="What Are You Doing?"
             android:textColor="@color/text_primary"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -94,7 +94,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="10 reels dekh chuka hai! Kuch kaam kar le!"
+            android:text="10 reels watched already! Stop scrolling and do something productive!"
             android:textColor="@color/text_secondary"
             android:textSize="14sp"
             android:lineSpacingExtra="3dp"
@@ -115,7 +115,7 @@
                 android:id="@+id/tvModalStats"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="📜 10 Reels  |  ⏱️ 05:00 Wasted"
+                android:text="📜 10 Reels  |  ⏱️ 05:00 Lost"
                 android:textColor="@color/accent_amber"
                 android:textSize="12sp"
                 android:textStyle="bold" />
@@ -127,7 +127,7 @@
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:background="@drawable/bg_button_primary"
-            android:text="Sudhar Jaunga"
+            android:text="I Will Stop"
             android:textColor="@color/on_primary"
             android:textSize="15sp"
             android:textStyle="bold"
@@ -140,7 +140,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Powered by BasKarBhai • Engineered by mdx"
+            android:text="Powered by BasKarBhai • Engineered by maazmdx"
             android:textColor="@color/text_muted"
             android:textSize="10sp"
             android:textAlignment="center" />

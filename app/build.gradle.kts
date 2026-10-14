@@ -9,15 +9,15 @@ android {
 
     defaultConfig {
         applicationId = "com.baskarbhai.roast"
-        minSdk = 26
+        minSdk = 29 // Usable from Android 10 (API 29) through Android 14+ (API 34)
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0.0-mdx"
+        versionName = "1.0.0-maazmdx"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "AUTHOR_TAG", "\"mdx\"")
-        buildConfigField("String", "APP_SIGNATURE", "\"Crafted with precision by mdx\"")
+        buildConfigField("String", "AUTHOR_TAG", "\"maazmdx\"")
+        buildConfigField("String", "APP_SIGNATURE", "\"Crafted by maazmdx\"")
     }
 
     buildTypes {

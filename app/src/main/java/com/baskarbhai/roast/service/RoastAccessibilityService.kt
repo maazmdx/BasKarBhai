@@ -13,13 +13,14 @@ import com.baskarbhai.roast.util.FilterUtils
 /**
  * Core AccessibilityService for BasKarBhai.
  * Features:
+ *  - Compatible from Android 10 (API 29) to Android 14+ (API 34).
  *  - Zero-permission floating HUD and full-screen modal overlays via TYPE_ACCESSIBILITY_OVERLAY.
  *  - Smart Reels/Shorts filter detecting vertical pagers while filtering out Instagram DMs.
  *  - 1200ms scroll debounce.
  *  - Active session timer running every 1000ms while target app is active.
  *  - 10-minute session timeout reset.
  *  - 4 Escalation Tiers triggered by EITHER Reel Count OR Time.
- * Engineered by mdx.
+ * Architected by maazmdx.
  */
 class RoastAccessibilityService : AccessibilityService() {
 
@@ -46,7 +47,6 @@ class RoastAccessibilityService : AccessibilityService() {
     private var lastScrollTimestamp = 0L
     private var lastLeaveTimestamp = 0L
 
-    // Active session counters
     var sessionReelCount = 0
         private set
     var sessionActiveSeconds = 0L
@@ -54,7 +54,6 @@ class RoastAccessibilityService : AccessibilityService() {
     private var currentForegroundPackage: String? = null
     private var highestTierTriggered = 0
 
-    // 1-second interval session timer runnable
     private val timerRunnable = object : Runnable {
         override fun run() {
             if (isInTargetApp()) {
@@ -72,7 +71,7 @@ class RoastAccessibilityService : AccessibilityService() {
     override fun onServiceConnected() {
         super.onServiceConnected()
         instance = this
-        Log.i(TAG, "BasKarBhai RoastAccessibilityService connected. Powered by mdx.")
+        Log.i(TAG, "BasKarBhai RoastAccessibilityService connected. Created by maazmdx.")
 
         hudManager = FloatingHudManager(this)
         modalManager = RoastModalManager(this) { actionId ->
@@ -107,7 +106,6 @@ class RoastAccessibilityService : AccessibilityService() {
                 resetSession()
             }
 
-            // Start HUD & Timer if not already active
             if (PreferencesManager.isHudEnabled && !hudManager.isShowing()) {
                 hudManager.show(sessionReelCount, sessionActiveSeconds)
             }
@@ -120,7 +118,6 @@ class RoastAccessibilityService : AccessibilityService() {
             if (wasInTarget) {
                 lastLeaveTimestamp = System.currentTimeMillis()
             }
-            // Hide HUD when outside target apps unless modal is showing
             if (hudManager.isShowing() && !modalManager.isShowing()) {
                 hudManager.hide()
             }
@@ -134,11 +131,9 @@ class RoastAccessibilityService : AccessibilityService() {
 
         val now = System.currentTimeMillis()
         if (now - lastScrollTimestamp < SCROLL_DEBOUNCE_MS) {
-            // Debounced scroll event
             return
         }
 
-        // Deep inspect view hierarchy: ensure it's a Reels/Shorts vertical pager and NOT an Instagram DM
         val rootNode = try {
             rootInActiveWindow
         } catch (e: Exception) {
@@ -155,9 +150,6 @@ class RoastAccessibilityService : AccessibilityService() {
         }
     }
 
-    /**
-     * Checks if either Reel Count OR Active Time has crossed an escalation threshold.
-     */
     private fun checkMilestones() {
         if (modalManager.isShowing()) return
 

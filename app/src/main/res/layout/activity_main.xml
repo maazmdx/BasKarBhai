@@ -16,7 +16,7 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <!-- App Header & MDX Tag -->
+            <!-- App Header & MAAZMDX Tag -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -56,13 +56,13 @@
                         android:textSize="12sp" />
                 </LinearLayout>
 
-                <!-- Engraved Author Badge -->
+                <!-- Engraved Contributor Badge -->
                 <TextView
                     android:id="@+id/tvAuthorBadge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_badge"
-                    android:text="⚡ by mdx"
+                    android:text="⚡ by maazmdx"
                     android:textColor="@color/flame_orange"
                     android:textSize="11sp"
                     android:textStyle="bold"
@@ -70,7 +70,7 @@
                     android:focusable="true" />
             </LinearLayout>
 
-            <!-- 1. Protection Service Status Card -->
+            <!-- 1. Quick Protection Service Status Card -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -109,13 +109,22 @@
                             android:textSize="14sp"
                             android:textStyle="bold"
                             android:fontFamily="sans-serif-black" />
+
+                        <!-- Android 10+ badge -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Android 10+"
+                            android:textColor="@color/accent_cyan"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <TextView
                         android:id="@+id/tvStatusDesc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="BasKarBhai requires Accessibility Service to detect Reels/Shorts scrolling and display zero-permission overlays."
+                        android:text="Fast 1-tap activation: Tap below to turn on the Accessibility service so BasKarBhai can track doomscrolling."
                         android:textColor="@color/text_secondary"
                         android:textSize="12sp"
                         android:lineSpacingExtra="2dp"
@@ -132,6 +141,7 @@
                         android:textAllCaps="false"
                         android:layout_marginBottom="8dp" />
 
+                    <!-- Only visible if on Android 13+ -->
                     <Button
                         android:id="@+id/btnRestrictedSettings"
                         android:layout_width="match_parent"
@@ -145,7 +155,88 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- 2. Daily Stats Card -->
+            <!-- 2. Fast 1-Tap Presets Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="18dp"
+                app:cardBackgroundColor="@color/bg_dark_card"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/presets_title"
+                        android:textColor="@color/text_primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Choose how aggressively BasKarBhai intervenes on Reels &amp; Shorts:"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11sp"
+                        android:layout_marginBottom="10dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="3">
+
+                        <Button
+                            android:id="@+id/btnPresetStrict"
+                            android:layout_width="0dp"
+                            android:layout_height="38dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_button_secondary"
+                            android:text="Strict"
+                            android:textColor="@color/flame_orange"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:textAllCaps="false"
+                            android:layout_marginEnd="3dp" />
+
+                        <Button
+                            android:id="@+id/btnPresetBalanced"
+                            android:layout_width="0dp"
+                            android:layout_height="38dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_button_primary"
+                            android:text="Balanced"
+                            android:textColor="@color/on_primary"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:textAllCaps="false"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginEnd="3dp" />
+
+                        <Button
+                            android:id="@+id/btnPresetRelaxed"
+                            android:layout_width="0dp"
+                            android:layout_height="38dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_button_secondary"
+                            android:text="Relaxed"
+                            android:textColor="@color/accent_green"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:textAllCaps="false"
+                            android:layout_marginStart="3dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- 3. Daily Stats Card -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -272,7 +363,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- 3. Friend-Group Snitch Webhook Card -->
+            <!-- 4. Friend-Group Snitch Webhook Card -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -368,7 +459,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- 4. Threshold & Interactive Test Controls -->
+            <!-- 5. Threshold & Interactive Test Controls -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -395,7 +486,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Escalates across 4 tiers when either Reel Count OR Doom Time is reached. Preview any tier below:"
+                        android:text="Preview any escalation tier popup immediately:"
                         android:textColor="@color/text_secondary"
                         android:textSize="11sp"
                         android:layout_marginBottom="12dp" />
@@ -476,7 +567,7 @@
                 android:id="@+id/tvFooterCredits"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="BasKarBhai v1.0.0-mdx • Engineered with 🔥 by mdx\nTap to view developer manifesto"
+                android:text="BasKarBhai v1.0.0 • Created by maazmdx\nTap to view project manifesto"
                 android:textColor="@color/text_muted"
                 android:textSize="11sp"
                 android:textAlignment="center"

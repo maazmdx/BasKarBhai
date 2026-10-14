@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 
 /**
  * Handles Webhook dispatches to Discord or Telegram channels to snitch on doomed scrollers.
- * Engineered by mdx.
+ * Architected by maazmdx.
  */
 object WebhookHelper {
 
@@ -52,14 +52,14 @@ object WebhookHelper {
             return
         }
 
-        val safeNickname = if (nickname.isBlank()) "Our dear friend" else nickname
+        val safeNickname = if (nickname.isBlank()) "Our friend" else nickname
         val message = "🚨 **BAS KAR BHAI - DOOMSCROLL SNITCH ALERT!** 🚨\n\n" +
                 "👤 **User:** `$safeNickname`\n" +
                 "📱 **Platform:** `$platformName`\n" +
                 "📜 **Reels Watched:** `$reelsCount`\n" +
                 "⏱️ **Time Wasted:** `$activeDuration`\n" +
                 "⚡ **Action Taken:** User hit **Tier 4 Escalation**! Kicked out to Home Screen immediately!\n\n" +
-                "_Engineered with 🔥 by mdx • BasKarBhai Sentinel_"
+                "_Created by maazmdx • BasKarBhai Sentinel_"
 
         sendPayload(webhookUrl, safeNickname, message, callback)
     }
@@ -77,10 +77,10 @@ object WebhookHelper {
             return
         }
 
-        val safeNickname = if (nickname.isBlank()) "Maaz / mdx" else nickname
+        val safeNickname = if (nickname.isBlank()) "maazmdx" else nickname
         val message = "🧪 **BasKarBhai Webhook Test Successful!**\n\n" +
                 "Hey **$safeNickname**, your friend-group snitch channel is configured and ready to roast doom-scrollers!\n" +
-                "_⚡ Powered by mdx Engine_"
+                "_⚡ Powered by maazmdx_"
 
         sendPayload(webhookUrl, safeNickname, message, callback)
     }
@@ -94,13 +94,12 @@ object WebhookHelper {
         try {
             val jsonBody = JSONObject().apply {
                 if (webhookUrl.contains("discord.com", ignoreCase = true)) {
-                    put("username", "BasKarBhai [mdx Shield]")
+                    put("username", "BasKarBhai [maazmdx]")
                     put("content", messageContent)
                 } else if (webhookUrl.contains("telegram.org", ignoreCase = true)) {
                     put("text", messageContent)
                     put("parse_mode", "Markdown")
                 } else {
-                    // Generic Webhook payload
                     put("sender", "BasKarBhai")
                     put("user", nickname)
                     put("message", messageContent)
@@ -111,7 +110,7 @@ object WebhookHelper {
             val request = Request.Builder()
                 .url(webhookUrl)
                 .post(requestBody)
-                .addHeader("User-Agent", "BasKarBhai-Android-mdx/1.0")
+                .addHeader("User-Agent", "BasKarBhai-Android-maazmdx/1.0")
                 .build()
 
             client.newCall(request).enqueue(object : Callback {

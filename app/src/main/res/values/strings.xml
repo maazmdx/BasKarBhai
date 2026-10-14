@@ -1,19 +1,25 @@
 <resources>
     <string name="app_name">BasKarBhai</string>
-    <string name="author_tag">mdx</string>
+    <string name="author_tag">maazmdx</string>
     <string name="app_slogan">Stop Doomscrolling • Reclaim Your Focus</string>
-    <string name="author_credit">Engineered with 🔥 by mdx</string>
+    <string name="author_credit">Engineered by maazmdx</string>
 
     <string name="accessibility_service_label">BasKarBhai Doomscroll Protector</string>
-    <string name="accessibility_service_description">Tracks vertical scrolling in Instagram Reels and YouTube Shorts. Displays a draggable live overlay counter and triggers funny meme intervention popups to stop mindless doomscrolling.</string>
+    <string name="accessibility_service_description">Tracks vertical scrolling in Instagram Reels and YouTube Shorts. Displays a live overlay counter and triggers funny meme intervention popups to stop mindless doomscrolling.</string>
 
     <!-- Main Dashboard -->
     <string name="header_title">BasKarBhai</string>
     <string name="header_subtitle">Anti-Doomscroll Meme Interceptor</string>
     <string name="service_status_active">PROTECTION ACTIVE</string>
     <string name="service_status_inactive">PROTECTION INACTIVE</string>
-    <string name="enable_service_btn">Enable Accessibility Service</string>
-    <string name="restricted_settings_guide_btn">Android 13+ Restricted Settings Guide</string>
+    <string name="enable_service_btn">Turn On Protection</string>
+    <string name="restricted_settings_guide_btn">Android 13+ Setup Guide</string>
+
+    <!-- Fast Presets -->
+    <string name="presets_title">Quick Setup Presets</string>
+    <string name="preset_strict">⚡ Strict (5 Reels / 3m)</string>
+    <string name="preset_standard">⚖️ Balanced (15 Reels / 10m)</string>
+    <string name="preset_relaxed">🧘 Relaxed (30 Reels / 20m)</string>
 
     <string name="daily_stats_title">Today\'s Scroll Report</string>
     <string name="reels_watched">Reels / Shorts</string>
@@ -22,10 +28,10 @@
     <string name="reset_stats_btn">Reset Daily Counters</string>
 
     <string name="snitch_section_title">Friend-Group Snitch Webhook</string>
-    <string name="snitch_section_desc">When you hit Tier 4 doomscroll, BasKarBhai will snitch on you to your friends\' Discord or Telegram group!</string>
-    <string name="nickname_hint">Enter Your Nickname (e.g. Pappu)</string>
+    <string name="snitch_section_desc">When you hit Tier 4 doomscroll, BasKarBhai alerts your friends on Discord or Telegram!</string>
+    <string name="nickname_hint">Your Nickname</string>
     <string name="webhook_hint">Discord or Telegram Webhook URL</string>
-    <string name="test_webhook_btn">Test Webhook Ping</string>
+    <string name="test_webhook_btn">Test Webhook</string>
     <string name="save_settings_btn">Save Settings</string>
 
     <string name="thresholds_title">Escalation Milestones &amp; Memes</string>
@@ -33,18 +39,18 @@
     <string name="test_hud_btn">Test Floating HUD Overlay</string>
 
     <!-- Tier Defaults -->
-    <string name="tier1_title">Tier 1: Bhai kya kar raha hai tu?</string>
-    <string name="tier1_default_caption">Bhai kya kar raha hai tu? 10 reels dekh chuka hai!</string>
-    <string name="tier2_title">Tier 2: Padhai Likhai Me Dhyan Lagao!</string>
-    <string name="tier2_default_caption">Bas kar bhai! IAS YAS bano, desh ko sambhalo!</string>
-    <string name="tier3_title">Tier 3: Ruko Jara, Sabar Karo!</string>
-    <string name="tier3_default_caption">Ruko Jara, Sabar Karo! Kicking you out of Reels player…</string>
-    <string name="tier4_title">Tier 4: Khatam! Tata! Bye-Bye!</string>
-    <string name="tier4_default_caption">Khatam! Tata! Bye-Bye! Sending you straight to Home Screen!</string>
+    <string name="tier1_title">Tier 1: What Are You Doing?</string>
+    <string name="tier1_default_caption">10 reels watched already! Stop scrolling and do something productive!</string>
+    <string name="tier2_title">Tier 2: Focus On What Matters!</string>
+    <string name="tier2_default_caption">25 reels in! Put down the phone, build your future and reclaim your focus!</string>
+    <string name="tier3_title">Tier 3: Wait! Hold Up!</string>
+    <string name="tier3_default_caption">40 reels watched! Exiting Reels player right now to save your attention!</string>
+    <string name="tier4_title">Tier 4: Game Over! Bye-Bye!</string>
+    <string name="tier4_default_caption">60 Reels / 30 Minutes reached! Closing to Home Screen and notifying your group chat!</string>
 
     <string name="dismiss_locked_countdown">Patience… (%d)</string>
     <string name="dismiss_tap_remaining">Tap %d more times to dismiss!</string>
-    <string name="dismiss_ready">Sudhar Jaunga (Dismiss)</string>
+    <string name="dismiss_ready">I Will Stop (Dismiss)</string>
     <string name="action_back_hint">Exiting Reels Player Now…</string>
     <string name="action_home_hint">Closing Apps &amp; Snitching…</string>
 </resources>

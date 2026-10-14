@@ -27,7 +27,7 @@ import com.baskarbhai.roast.util.TimeUtils
  * Full-screen Escalation Modal Overlay via TYPE_ACCESSIBILITY_OVERLAY.
  * Implements Tier 1 (3s lock), Tier 2 (5 taps), Tier 3 (Auto BACK), and Tier 4 (Auto HOME + Webhook).
  * Hijacks and releases Audio Focus seamlessly.
- * Engineered by mdx.
+ * Architected by maazmdx.
  */
 class RoastModalManager(
     private val context: Context,
@@ -57,7 +57,6 @@ class RoastModalManager(
         platformName: String = "Instagram Reels"
     ) {
         if (isAttached || modalView != null) {
-            // Dismiss existing before showing higher escalation
             hide()
         }
 
@@ -76,7 +75,7 @@ class RoastModalManager(
         val btnAction: Button = view.findViewById(R.id.btnModalAction)
         val tvHint: TextView = view.findViewById(R.id.tvActionHint)
 
-        tvTierBadge.text = "🚨 TIER $tierLevel ESCALATION • mdx shield"
+        tvTierBadge.text = "🚨 TIER $tierLevel ESCALATION • maazmdx shield"
         tvTitle.text = tierConfig.title
         tvCaption.text = tierConfig.caption
         tvStats.text = "📜 $reelsCount Reels  |  ⏱️ ${TimeUtils.formatDurationMmSs(activeSeconds)} Lost"
@@ -137,7 +136,7 @@ class RoastModalManager(
     private fun setupTier1(btnAction: Button, tvHint: TextView) {
         btnAction.isEnabled = false
         btnAction.alpha = 0.5f
-        tvHint.text = "Button locked for 3 seconds. Reflect on your life choices."
+        tvHint.text = "Button locked for 3 seconds. Stop mindless scrolling."
 
         countdownTimer?.cancel()
         countdownTimer = object : CountDownTimer(3000, 1000) {
@@ -149,8 +148,8 @@ class RoastModalManager(
             override fun onFinish() {
                 btnAction.isEnabled = true
                 btnAction.alpha = 1.0f
-                btnAction.text = "Theek Hai, Sudhar Jaunga"
-                tvHint.text = "Tap to dismiss and go do something productive."
+                btnAction.text = "I Will Stop (Dismiss)"
+                tvHint.text = "Tap to dismiss and get back to your work."
             }
         }.start()
 
@@ -167,14 +166,14 @@ class RoastModalManager(
         tapRemainingCount = 5
         btnAction.isEnabled = true
         btnAction.text = "Tap 5 times to dismiss (5 remaining)"
-        tvHint.text = "Work hard! Tap rapidly to earn your escape!"
+        tvHint.text = "Tap rapidly to unlock dismissal!"
 
         btnAction.setOnClickListener {
             tapRemainingCount--
             if (tapRemainingCount > 0) {
                 btnAction.text = "Tap $tapRemainingCount more times!"
             } else {
-                btnAction.text = "Unlocked! Sudhar jao!"
+                btnAction.text = "Unlocked! Put down the phone!"
                 dismiss(2)
             }
         }
@@ -195,7 +194,6 @@ class RoastModalManager(
             }
 
             override fun onFinish() {
-                // Execute GLOBAL_ACTION_BACK (value 1)
                 actionPerformer?.invoke(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_BACK)
                 dismiss(3)
             }
@@ -221,7 +219,6 @@ class RoastModalManager(
         btnAction.text = "Kicking to Home Screen & Snitching…"
         tvHint.text = "Tier 4 triggered! Alert sent to friend-group Discord/Telegram!"
 
-        // Fire optional webhook alert
         val webhookUrl = PreferencesManager.webhookUrl
         val nickname = PreferencesManager.nickname
         if (webhookUrl.isNotBlank()) {
@@ -242,7 +239,6 @@ class RoastModalManager(
             }
 
             override fun onFinish() {
-                // Execute GLOBAL_ACTION_HOME (value 2)
                 actionPerformer?.invoke(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_HOME)
                 dismiss(4)
             }
@@ -272,7 +268,7 @@ class RoastModalManager(
             try {
                 windowManager.removeView(modalView)
             } catch (e: Exception) {
-                // View might already be detached
+                // Ignore detachment error
             } finally {
                 isAttached = false
                 modalView = null

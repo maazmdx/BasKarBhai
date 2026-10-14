@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   build:
-    name: 🔨 Compile APK (Engineered by mdx)
+    name: 🔨 Compile APK (Architected by maazmdx)
     runs-on: ubuntu-latest
 
     steps:
@@ -48,7 +48,7 @@ jobs:
             echo "apk_sha=$SHA256" >> $GITHUB_OUTPUT
             echo "=========================================="
             echo " BasKarBhai APK Successfully Compiled!"
-            echo " Author Tag: mdx"
+            echo " Contributor: maazmdx"
             echo " Size: $FILE_SIZE"
             echo " SHA-256: $SHA256"
             echo " Path: $APK_PATH"
@@ -69,15 +69,15 @@ jobs:
       - name: 📋 Generate Step Summary
         run: |
           echo "### 🚀 BasKarBhai APK Build Succeeded!" >> $GITHUB_STEP_SUMMARY
-          echo "**Architected & Crafted by:** \`mdx\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Architected & Crafted by:** \`maazmdx\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
           echo "|---|---|" >> $GITHUB_STEP_SUMMARY
           echo "| **Package** | \`com.baskarbhai.roast\` |" >> $GITHUB_STEP_SUMMARY
           echo "| **Target SDK** | \`34\` (Android 14) |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Min SDK** | \`26\` (Android 8.0) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Min SDK** | \`29\` (Android 10) |" >> $GITHUB_STEP_SUMMARY
           echo "| **Artifact Name** | \`BasKarBhai-APK\` |" >> $GITHUB_STEP_SUMMARY
           echo "| **APK Size** | \`${{ steps.verify_apk.outputs.apk_size }}\` |" >> $GITHUB_STEP_SUMMARY
           echo "| **SHA256 Checksum** | \`${{ steps.verify_apk.outputs.apk_sha }}\` |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "> 💡 **Installation Tip for Android 13+:** Sideloaded accessibility apps require unlocking *Restricted Settings* (App Info -> Three Dots -> Allow Restricted Settings)." >> $GITHUB_STEP_SUMMARY
+          echo "> 💡 **Instant Setup:** On Android 10, 11, and 12, simply toggle the Accessibility Service ON for instant protection." >> $GITHUB_STEP_SUMMARY
