@@ -4,7 +4,7 @@ import java.util.Locale
 
 /**
  * Utility functions for formatting durations and timestamps.
- * Engineered by mdx.
+ * Engineered by maazmdx.
  */
 object TimeUtils {
 

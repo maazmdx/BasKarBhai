@@ -1,0 +1,53 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="260dp"
+    android:height="180dp"
+    android:viewportWidth="260"
+    android:viewportHeight="180">
+
+    <!-- Dark High-Tech Background Plate -->
+    <path
+        android:fillColor="#0D1117"
+        android:pathData="M12,8 h236 a12,12 0 0 1 12,12 v140 a12,12 0 0 1 -12,12 h-236 a12,12 0 0 1 -12,-12 v-140 a12,12 0 0 1 12,-12 z" />
+
+    <!-- Danger Hazard Stripes Top & Bottom -->
+    <path
+        android:fillColor="#D50000"
+        android:pathData="M20,16 h20 l-10,8 h-20 z M50,16 h20 l-10,8 h-20 z M80,16 h20 l-10,8 h-20 z M110,16 h20 l-10,8 h-20 z M140,16 h20 l-10,8 h-20 z M170,16 h20 l-10,8 h-20 z M200,16 h20 l-10,8 h-20 z M230,16 h20 l-10,8 h-20 z" />
+
+    <!-- Grid Lines -->
+    <path
+        android:strokeColor="#2F1C24"
+        android:strokeWidth="1"
+        android:pathData="M20,50 h220 M20,90 h220 M20,130 h220 M70,16 v148 M130,16 v148 M190,16 v148" />
+
+    <!-- Cyber Skull Cranium -->
+    <path
+        android:fillColor="#FF1744"
+        android:pathData="M130,36 c-32,0 -48,18 -48,42 c0,14 8,24 16,30 v20 h64 v-20 c8,-6 16,-16 16,-30 c0,-24 -16,-42 -48,-42 z" />
+
+    <!-- Skull Eye Sockets -->
+    <path
+        android:fillColor="#0D1117"
+        android:pathData="M112,66 a10,12 0 1 0 0,24 a10,12 0 1 0 0,-24 z M148,66 a10,12 0 1 0 0,24 a10,12 0 1 0 0,-24 z" />
+
+    <!-- Eye Laser Glow Dots -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M112,74 a4,4 0 1 0 0,8 a4,4 0 1 0 0,-8 z M148,74 a4,4 0 1 0 0,8 a4,4 0 1 0 0,-8 z" />
+
+    <!-- Skull Teeth / Jaw Grid -->
+    <path
+        android:fillColor="#0D1117"
+        android:pathData="M106,112 h8 v14 h-8 z M118,112 h8 v14 h-8 z M130,112 h8 v14 h-8 z M142,112 h8 v14 h-8 z M154,112 h8 v14 h-8 z" />
+
+    <!-- Crossbones / Warning Beams -->
+    <path
+        android:strokeColor="#FF5252"
+        android:strokeWidth="3"
+        android:pathData="M60,40 L200,144 M200,40 L60,144" />
+
+    <!-- Lockout Padlock Symbol Below -->
+    <path
+        android:fillColor="#FFD600"
+        android:pathData="M124,136 h12 v12 h-12 z M126,132 c0,-3 2,-5 4,-5 s4,2 4,5 v4 h-8 z" />
+</vector>

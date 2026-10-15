@@ -1,5 +1,6 @@
 package com.baskarbhai.roast.ui
 
+import android.accessibilityservice.AccessibilityService
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PixelFormat
@@ -11,31 +12,36 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import android.view.animation.AlphaAnimation
+import android.view.animation.AnimationSet
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.ScaleAnimation
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
-import coil.load
 import com.baskarbhai.roast.R
-import com.baskarbhai.roast.audio.AudioFocusHelper
+import com.baskarbhai.roast.audio.AudioRoastPlayer
 import com.baskarbhai.roast.data.PreferencesManager
-import com.baskarbhai.roast.data.TierConfig
 import com.baskarbhai.roast.network.WebhookHelper
 import com.baskarbhai.roast.util.TimeUtils
 
 /**
  * Full-screen Escalation Modal Overlay via TYPE_ACCESSIBILITY_OVERLAY.
- * Implements Tier 1 (3s lock), Tier 2 (5 taps), Tier 3 (Auto BACK), and Tier 4 (Auto HOME + Webhook).
- * Hijacks and releases Audio Focus seamlessly.
- * Architected by maazmdx.
+ * Uses local vector graphics, synthetic alert buzzer tones, and TextToSpeech voice roasts.
+ * Implements Tier 1 (3s lock), Tier 2 (5 taps challenge), Tier 3 (Auto BACK), Tier 4 (Auto HOME + Webhook).
+ * Engineered by maazmdx.
  */
 class RoastModalManager(
     private val context: Context,
     private val actionPerformer: ((Int) -> Boolean)? = null
 ) {
 
+    companion object {
+        private const val TAG = "RoastModalManager"
+    }
+
     private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-    private val audioFocusHelper = AudioFocusHelper(context)
+    private val audioRoastPlayer = AudioRoastPlayer(context)
     private var modalView: View? = null
     private var isAttached = false
 
@@ -48,6 +54,8 @@ class RoastModalManager(
     }
 
     var dismissListener: DismissListener? = null
+
+    fun isShowing(): Boolean = isAttached && modalView != null
 
     @SuppressLint("InflateParams", "SetTextI18n")
     fun show(
@@ -71,32 +79,46 @@ class RoastModalManager(
         val tvCaption: TextView = view.findViewById(R.id.tvRoastCaption)
         val tvStats: TextView = view.findViewById(R.id.tvModalStats)
         val ivMeme: ImageView = view.findViewById(R.id.ivMemeImage)
-        val pbLoading: ProgressBar = view.findViewById(R.id.pbMemeLoading)
         val btnAction: Button = view.findViewById(R.id.btnModalAction)
         val tvHint: TextView = view.findViewById(R.id.tvActionHint)
 
-        tvTierBadge.text = "🚨 TIER $tierLevel ESCALATION • maazmdx shield"
+        // Tier badge with icon
+        val tierBadgeText = when (tierLevel) {
+            1 -> "⚠️ TIER 1 • REALITY CHECK"
+            2 -> "🔥 TIER 2 • DOOMSCROLL DETECTED"
+            3 -> "🚨 TIER 3 • EMERGENCY INTERVENTION"
+            4 -> "💀 TIER 4 • TOTAL LOCKOUT"
+            else -> "⚠️ TIER $tierLevel"
+        }
+        tvTierBadge.text = tierBadgeText
         tvTitle.text = tierConfig.title
         tvCaption.text = tierConfig.caption
-        tvStats.text = "📜 $reelsCount Reels  |  ⏱️ ${TimeUtils.formatDurationMmSs(activeSeconds)} Lost"
+        tvStats.text = "$reelsCount Reels  •  ${TimeUtils.formatDurationMmSs(activeSeconds)} Wasted"
 
-        // Load Meme GIF with Coil and fallback to custom vector artwork
-        pbLoading.visibility = View.VISIBLE
-        ivMeme.load(tierConfig.memeUrl) {
-            crossfade(true)
-            placeholder(tierConfig.fallbackDrawableRes)
-            error(tierConfig.fallbackDrawableRes)
-            listener(
-                onSuccess = { _, _ -> pbLoading.visibility = View.GONE },
-                onError = { _, _ -> pbLoading.visibility = View.GONE }
-            )
+        // Local vector artwork — guaranteed to render crisp without network
+        ivMeme.setImageResource(tierConfig.fallbackDrawableRes)
+
+        // Smooth Cyber Entrance Animation
+        val cardContainer = view.findViewById<View>(R.id.modalCardContainer)
+        val scaleAnim = ScaleAnimation(
+            0.88f, 1.0f, 0.88f, 1.0f,
+            ScaleAnimation.RELATIVE_TO_SELF, 0.5f,
+            ScaleAnimation.RELATIVE_TO_SELF, 0.5f
+        )
+        val fadeAnim = AlphaAnimation(0f, 1f)
+        val animSet = AnimationSet(true).apply {
+            addAnimation(scaleAnim)
+            addAnimation(fadeAnim)
+            duration = 260
+            interpolator = DecelerateInterpolator()
         }
+        cardContainer.startAnimation(animSet)
 
-        // Hijack audio focus immediately to mute Reels/Shorts
-        audioFocusHelper.hijackAudioFocus()
+        // Play Alert Tone + Vibrate + Speak TextToSpeech Voice Roast
+        audioRoastPlayer.playRoastAudio(tierConfig.speechText)
         PreferencesManager.incrementDailyRoasts()
 
-        // Configure Tier-Specific Escalation Mechanics
+        // Tier mechanics
         when (tierLevel) {
             1 -> setupTier1(btnAction, tvHint)
             2 -> setupTier2(btnAction, tvHint)
@@ -105,7 +127,12 @@ class RoastModalManager(
             else -> setupTier1(btnAction, tvHint)
         }
 
-        val overlayType = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY
+        // Support both AccessibilityService overlay and Activity preview overlay
+        val overlayType = if (context is AccessibilityService) {
+            WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY
+        } else {
+            WindowManager.LayoutParams.TYPE_APPLICATION
+        }
 
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
@@ -123,33 +150,33 @@ class RoastModalManager(
             windowManager.addView(view, params)
             isAttached = true
         } catch (e: Exception) {
-            Log.e("RoastModalManager", "Failed to add overlay window: ${e.message}")
+            Log.e(TAG, "Failed to add overlay: ${e.message}")
             isAttached = false
             modalView = null
-            audioFocusHelper.releaseAudioFocus()
+            audioRoastPlayer.release()
         }
     }
 
     /**
-     * Tier 1: 3-Second Locked Button
+     * Tier 1: 3-Second Locked Countdown Button
      */
     private fun setupTier1(btnAction: Button, tvHint: TextView) {
         btnAction.isEnabled = false
-        btnAction.alpha = 0.5f
-        tvHint.text = "Button locked for 3 seconds. Stop mindless scrolling."
+        btnAction.alpha = 0.45f
+        tvHint.text = "Locked for 3 seconds. Take a breath and look away."
 
         countdownTimer?.cancel()
         countdownTimer = object : CountDownTimer(3000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val secondsLeft = (millisUntilFinished / 1000) + 1
-                btnAction.text = "Patience… ($secondsLeft)"
+                btnAction.text = "Take a breath ($secondsLeft s)"
             }
 
             override fun onFinish() {
                 btnAction.isEnabled = true
                 btnAction.alpha = 1.0f
-                btnAction.text = "I Will Stop (Dismiss)"
-                tvHint.text = "Tap to dismiss and get back to your work."
+                btnAction.text = "I'm Putting Phone Down"
+                tvHint.text = "Tap to dismiss and return to reality."
             }
         }.start()
 
@@ -159,55 +186,57 @@ class RoastModalManager(
     }
 
     /**
-     * Tier 2: 5 Taps Required to Dismiss
+     * Tier 2: 5 Rapid Taps Challenge
      */
     @SuppressLint("SetTextI18n")
     private fun setupTier2(btnAction: Button, tvHint: TextView) {
         tapRemainingCount = 5
-        btnAction.isEnabled = true
-        btnAction.text = "Tap 5 times to dismiss (5 remaining)"
-        tvHint.text = "Tap rapidly to unlock dismissal!"
+        btnAction.text = "Tap 5 times to prove you're awake (5)"
+        tvHint.text = "Willpower test: Tap repeatedly to dismiss."
 
         btnAction.setOnClickListener {
             tapRemainingCount--
             if (tapRemainingCount > 0) {
-                btnAction.text = "Tap $tapRemainingCount more times!"
+                btnAction.text = "Keep tapping! ($tapRemainingCount left)"
             } else {
-                btnAction.text = "Unlocked! Put down the phone!"
+                btnAction.text = "Dismissing..."
                 dismiss(2)
             }
         }
     }
 
     /**
-     * Tier 3: Auto-execute BACK to exit Reels Player
+     * Tier 3: Emergency Brake — Auto Back Navigation
      */
     private fun setupTier3(btnAction: Button, tvHint: TextView) {
-        btnAction.text = "Exiting Reels Player Now…"
-        tvHint.text = "Auto-executing BACK gesture to protect your attention!"
+        btnAction.isEnabled = false
+        btnAction.text = "Emergency Exit in 3s..."
+        tvHint.text = "System is auto-exiting Reels player."
 
         countdownTimer?.cancel()
-        countdownTimer = object : CountDownTimer(2500, 500) {
+        countdownTimer = object : CountDownTimer(3000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                val secs = (millisUntilFinished / 1000) + 1
-                btnAction.text = "Auto-exiting Reels in $secs s…"
+                val secondsLeft = (millisUntilFinished / 1000) + 1
+                btnAction.text = "Emergency Exit in ${secondsLeft}s..."
             }
 
             override fun onFinish() {
-                actionPerformer?.invoke(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_BACK)
-                dismiss(3)
+                executeAutoBack()
             }
         }.start()
 
         btnAction.setOnClickListener {
-            countdownTimer?.cancel()
-            actionPerformer?.invoke(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_BACK)
-            dismiss(3)
+            executeAutoBack()
         }
     }
 
+    private fun executeAutoBack() {
+        actionPerformer?.invoke(AccessibilityService.GLOBAL_ACTION_BACK)
+        dismiss(3)
+    }
+
     /**
-     * Tier 4: Auto-execute HOME + Webhook Snitch Alert
+     * Tier 4: Total Lockout — Ejection to Home Screen + Webhook Alert
      */
     private fun setupTier4(
         btnAction: Button,
@@ -216,39 +245,27 @@ class RoastModalManager(
         activeSeconds: Long,
         platformName: String
     ) {
-        btnAction.text = "Kicking to Home Screen & Snitching…"
-        tvHint.text = "Tier 4 triggered! Alert sent to friend-group Discord/Telegram!"
+        btnAction.isEnabled = false
+        btnAction.text = "Ejecting to Home Screen..."
+        tvHint.text = "Alerting friend-group webhook & exiting app."
 
         val webhookUrl = PreferencesManager.webhookUrl
         val nickname = PreferencesManager.nickname
         if (webhookUrl.isNotBlank()) {
-            WebhookHelper.sendTier4SnitchAlert(
+            WebhookHelper.sendDoomscrollAlert(
                 webhookUrl = webhookUrl,
                 nickname = nickname,
+                platform = platformName,
+                tier = 4,
                 reelsCount = reelsCount,
-                activeDuration = TimeUtils.formatHumanReadable(activeSeconds),
-                platformName = platformName
+                durationSeconds = activeSeconds
             )
         }
 
-        countdownTimer?.cancel()
-        countdownTimer = object : CountDownTimer(2000, 500) {
-            override fun onTick(millisUntilFinished: Long) {
-                val secs = (millisUntilFinished / 1000) + 1
-                btnAction.text = "Closing to Home Screen in $secs s…"
-            }
-
-            override fun onFinish() {
-                actionPerformer?.invoke(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_HOME)
-                dismiss(4)
-            }
-        }.start()
-
-        btnAction.setOnClickListener {
-            countdownTimer?.cancel()
-            actionPerformer?.invoke(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_HOME)
+        mainHandler.postDelayed({
+            actionPerformer?.invoke(AccessibilityService.GLOBAL_ACTION_HOME)
             dismiss(4)
-        }
+        }, 3200L)
     }
 
     private fun dismiss(tierLevel: Int) {
@@ -256,23 +273,20 @@ class RoastModalManager(
         dismissListener?.onDismissed(tierLevel)
     }
 
-    fun isShowing(): Boolean = isAttached
-
     fun hide() {
         countdownTimer?.cancel()
         countdownTimer = null
-
-        audioFocusHelper.releaseAudioFocus()
+        mainHandler.removeCallbacksAndMessages(null)
+        audioRoastPlayer.release()
 
         if (isAttached && modalView != null) {
             try {
                 windowManager.removeView(modalView)
             } catch (e: Exception) {
-                // Ignore detachment error
-            } finally {
-                isAttached = false
-                modalView = null
+                Log.w(TAG, "Error removing modal overlay: ${e.message}")
             }
+            isAttached = false
+            modalView = null
         }
     }
 }

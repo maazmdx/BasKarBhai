@@ -1,0 +1,46 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="260dp"
+    android:height="180dp"
+    android:viewportWidth="260"
+    android:viewportHeight="180">
+
+    <!-- Dark High-Tech Background Plate -->
+    <path
+        android:fillColor="#0D1117"
+        android:pathData="M12,8 h236 a12,12 0 0 1 12,12 v140 a12,12 0 0 1 -12,12 h-236 a12,12 0 0 1 -12,-12 v-140 a12,12 0 0 1 12,-12 z" />
+
+    <!-- Grid Lines -->
+    <path
+        android:strokeColor="#1E293B"
+        android:strokeWidth="1"
+        android:pathData="M20,50 h220 M20,90 h220 M20,130 h220 M70,16 v148 M130,16 v148 M190,16 v148" />
+
+    <!-- Warning Octagon Outline -->
+    <path
+        android:strokeColor="#00E5FF"
+        android:strokeWidth="2.5"
+        android:pathData="M100,24 h60 l35,35 v62 l-35,35 h-60 l-35,-35 v-62 z" />
+
+    <!-- Ticking Hourglass / Sand of Time Drain -->
+    <path
+        android:fillColor="#00B0FF"
+        android:pathData="M108,44 h44 v8 l-18,28 l18,28 v8 h-44 v-8 l18,-28 l-18,-28 z" />
+
+    <!-- Falling Energy Particles -->
+    <path
+        android:fillColor="#FFD600"
+        android:pathData="M128,76 h4 v6 h-4 z M126,88 h8 v6 h-8 z M122,100 h16 v10 h-16 z" />
+
+    <!-- Overheat Warning Lightning Bolt -->
+    <path
+        android:fillColor="#FF3D00"
+        android:pathData="M136,36 L118,74 h14 L124,104 L142,66 h-14 Z" />
+
+    <!-- Side Status Warning Bars -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M40,70 h8 v40 h-8 z M212,70 h8 v40 h-8 z" />
+    <path
+        android:fillColor="#FF3D00"
+        android:pathData="M40,116 h8 v10 h-8 z M212,116 h8 v10 h-8 z" />
+</vector>

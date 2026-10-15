@@ -13,7 +13,7 @@ import com.baskarbhai.roast.data.PreferencesManager
 /**
  * BasKarBhai Application class.
  * Configures Coil with animated GIF decoding support and initializes preferences.
- * Engineered by mdx.
+ * Engineered by maazmdx.
  */
 class BasKarBhaiApp : Application(), ImageLoaderFactory {
 

@@ -55,15 +55,16 @@ Select your intervention intensity with a single tap:
 - **10-Minute Session Timeout**: If the user leaves Instagram or YouTube for more than 10 minutes (`SESSION_TIMEOUT_MS = 600,000L`), session counters automatically reset.
 - **Daily Statistics Engine**: Tracks Daily Reels, Total Time Wasted, and Roasts Dodged with automatic daily date rollover in `SharedPreferences`.
 
-### 4. Audio Focus Hijacking & Meme Escalation Modal (`RoastModalManager.kt`)
+### 4. Audio Focus Hijacking & Voice Roast Modal (`RoastModalManager.kt`)
 When milestone thresholds are reached:
-1. **Audio Focus Hijack**: Requests `AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE` via `AudioFocusHelper.kt`, instantly pausing or muting the background Reel or Short.
-2. **Audio Alert**: Triggers an alert buzzer through `ToneGenerator` and `RingtoneManager`.
-3. **Escalation Tiers**:
-   - 🚨 **Tier 1 (10 Reels OR 5 mins)**: *"What Are You Doing?"* (Ashneer Grover meme) — 3-second locked button countdown before dismiss is allowed.
-   - 🛑 **Tier 2 (25 Reels OR 12 mins)**: *"Focus On What Matters!"* (IAS Babu meme) — Requires rapidly tapping the dismiss button **5 times**.
-   - 🚫 **Tier 3 (40 Reels OR 20 mins)**: *"Wait! Hold Up!"* (Hindustani Bhau meme) — Automatically triggers `performGlobalAction(GLOBAL_ACTION_BACK)` to exit the Reels player!
-   - 💀 **Tier 4 (60 Reels OR 30 mins)**: *"Game Over! Bye-Bye!"* (Rahul Gandhi meme) — Executes `performGlobalAction(GLOBAL_ACTION_HOME)` to kick the user straight to the phone home screen **PLUS** sends a webhook snitch alert to your friends!
+1. **Audio Focus Hijack**: Requests `AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE` on `STREAM_MUSIC` via `AudioRoastPlayer.kt`, instantly pausing or muting the background Reel or Short.
+2. **Alert Tone & Haptics**: Generates high-frequency alert chimes via `AudioTrack` and triggers physical haptic vibration pulses.
+3. **TextToSpeech Voice Roast**: Speaks punchy, realistic wake-up roasts aloud via Android's native TTS engine.
+4. **Escalation Tiers**:
+   - ⚠️ **Tier 1 (10 Reels OR 5 mins)**: *"REALITY CHECK"* — 3-second locked button countdown before dismiss is allowed.
+   - 🔥 **Tier 2 (25 Reels OR 12 mins)**: *"DOOMSCROLL DETECTED"* — Requires rapidly tapping the dismiss button **5 times** to prove you are awake.
+   - 🚨 **Tier 3 (40 Reels OR 20 mins)**: *"SYSTEM INTERVENTION"* — Automatically triggers `performGlobalAction(GLOBAL_ACTION_BACK)` to exit the Reels player!
+   - 💀 **Tier 4 (60 Reels OR 30 mins)**: *"TOTAL LOCKOUT"* — Executes `performGlobalAction(GLOBAL_ACTION_HOME)` to kick the user straight to the phone home screen **PLUS** sends a webhook snitch alert to your friends!
 
 ### 5. Friend-Group Snitch Webhook (`WebhookHelper.kt`)
 - Supports **Discord** and **Telegram** Webhooks.
@@ -71,7 +72,7 @@ When milestone thresholds are reached:
   ```json
   {
     "username": "BasKarBhai [maazmdx]",
-    "content": "🚨 **DOOMSCROLL SNITCH ALERT!**\n**Pappu** reached **Tier 4 Doomscroll** (60 Reels / 30m) on Instagram Reels!\nBasKarBhai kicked them out to the phone home screen! 💀\n*Created by maazmdx*"
+    "content": "🚨 **DOOMSCROLL SNITCH ALERT!**\n**Player1** reached **Tier 4 Doomscroll** (60 Reels / 30m) on Instagram Reels!\nBasKarBhai kicked them out to the phone home screen! 💀\n*Created by maazmdx*"
   }
   ```
 

@@ -3,7 +3,7 @@
     android:id="@+id/modalRootOverlay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/modal_scrim"
+    android:background="#ED05070A"
     android:clickable="true"
     android:focusable="true">
 
@@ -16,133 +16,113 @@
         android:layout_marginEnd="24dp"
         android:background="@drawable/bg_modal_card"
         android:orientation="vertical"
-        android:padding="20dp"
-        android:elevation="12dp">
+        android:elevation="24dp">
 
-        <!-- Top Header & Tier Badge -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="12dp">
-
-            <TextView
-                android:id="@+id/tvTierBadge"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/bg_badge"
-                android:text="🚨 TIER 1 ALERT"
-                android:textColor="@color/flame_orange"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:fontFamily="sans-serif-black" />
-
-            <!-- Author Tag Signature -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="maazmdx shield"
-                android:textColor="@color/text_muted"
-                android:textSize="10sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <!-- Meme Image Container -->
+        <!-- Top Graphic Frame -->
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:layout_gravity="center"
-            android:background="#0A0D12"
-            android:clipToOutline="true">
+            android:layout_height="180dp"
+            android:background="#0A0E14"
+            android:padding="12dp">
 
-            <!-- Fallback Image / Coil Target -->
             <ImageView
                 android:id="@+id/ivMemeImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitCenter"
-                android:contentDescription="@string/thresholds_title"
-                android:src="@drawable/meme_tier1_ashneer" />
+                android:contentDescription="Intervention Visual"
+                android:src="@drawable/art_tier1_reality_check" />
 
-            <ProgressBar
-                android:id="@+id/pbMemeLoading"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_gravity="center"
-                android:indeterminateTint="@color/flame_orange"
-                android:visibility="gone" />
+            <!-- Tier Status Pill -->
+            <TextView
+                android:id="@+id/tvTierBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|start"
+                android:background="@drawable/bg_badge"
+                android:text="⚠️ TIER 1 • DETOX"
+                android:textColor="#FFAB00"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-black"
+                android:elevation="4dp" />
         </FrameLayout>
 
-        <!-- Roast Title -->
-        <TextView
-            android:id="@+id/tvRoastTitle"
+        <!-- Divider Line -->
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="What Are You Doing?"
-            android:textColor="@color/text_primary"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-black"
-            android:textAlignment="center" />
+            android:layout_height="1dp"
+            android:background="#21262D" />
 
-        <!-- Roast Subtitle / Punchline -->
-        <TextView
-            android:id="@+id/tvRoastCaption"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="10 reels watched already! Stop scrolling and do something productive!"
-            android:textColor="@color/text_secondary"
-            android:textSize="14sp"
-            android:lineSpacingExtra="3dp"
-            android:textAlignment="center" />
-
-        <!-- Stats Bar -->
+        <!-- Card Content Body -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="#161B22"
-            android:padding="10dp"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:orientation="vertical"
+            android:paddingStart="22dp"
+            android:paddingEnd="22dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="22dp">
 
+            <!-- Title -->
+            <TextView
+                android:id="@+id/tvRoastTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="REALITY CHECK"
+                android:textColor="#F0F6FC"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-black"
+                android:letterSpacing="0.04" />
+
+            <!-- Caption / Voice Roast Text -->
+            <TextView
+                android:id="@+id/tvRoastCaption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="You've scrolled through 10 reels back-to-back.\nThat’s pure dopamine fog. Look up, take a breath, and put the phone down."
+                android:textColor="#8B949E"
+                android:textSize="13sp"
+                android:lineSpacingExtra="4dp" />
+
+            <!-- Live Session Stats Pill -->
             <TextView
                 android:id="@+id/tvModalStats"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="📜 10 Reels  |  ⏱️ 05:00 Lost"
-                android:textColor="@color/accent_amber"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_badge"
+                android:text="10 Reels  •  05:00 Wasted"
+                android:textColor="#00E5FF"
                 android:textSize="12sp"
                 android:textStyle="bold" />
+
+            <!-- Action Button -->
+            <Button
+                android:id="@+id/btnModalAction"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_button_primary"
+                android:text="I Will Put Phone Down"
+                android:textColor="#000000"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                android:elevation="6dp" />
+
+            <!-- Hint / Contributor Footer -->
+            <TextView
+                android:id="@+id/tvActionHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="BasKarBhai • Protected by maazmdx"
+                android:textColor="#484F58"
+                android:textSize="11sp"
+                android:textAlignment="center" />
         </LinearLayout>
-
-        <!-- Dismiss / Action Button -->
-        <Button
-            android:id="@+id/btnModalAction"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:background="@drawable/bg_button_primary"
-            android:text="I Will Stop"
-            android:textColor="@color/on_primary"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:textAllCaps="false"
-            android:elevation="4dp" />
-
-        <!-- Subtle hint text for Tier 3 / Tier 4 actions -->
-        <TextView
-            android:id="@+id/tvActionHint"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Powered by BasKarBhai • Engineered by maazmdx"
-            android:textColor="@color/text_muted"
-            android:textSize="10sp"
-            android:textAlignment="center" />
     </LinearLayout>
 </FrameLayout>

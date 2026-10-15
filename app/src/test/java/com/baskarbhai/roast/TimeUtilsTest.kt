@@ -8,7 +8,7 @@ import org.junit.Test
 
 /**
  * Unit tests for Time formatting and Tier configuration.
- * Engineered by mdx.
+ * Engineered by maazmdx.
  */
 class TimeUtilsTest {
 
@@ -53,6 +53,7 @@ class TimeUtilsTest {
         assertEquals(30, t4.defaultMinuteThreshold)
 
         assertTrue(t1.caption.isNotEmpty())
-        assertTrue(t4.memeUrl.isNotEmpty())
+        assertTrue(t4.speechText.isNotEmpty())
+        assertTrue(t1.fallbackDrawableRes != 0)
     }
 }

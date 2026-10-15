@@ -3,7 +3,6 @@ package com.baskarbhai.roast.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PixelFormat
-import android.os.Build
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -19,9 +18,8 @@ import kotlin.math.abs
 
 /**
  * Draggable floating overlay HUD pill rendered via TYPE_ACCESSIBILITY_OVERLAY.
- * Requires ZERO runtime SYSTEM_ALERT_WINDOW permission when run from an AccessibilityService.
- * Displays live reel count and active doomscroll session timer.
- * Engineered by mdx.
+ * Compact design: shows reel count and timer, draggable to any position.
+ * Engineered by maazmdx.
  */
 class FloatingHudManager(private val context: Context) {
 
@@ -52,7 +50,11 @@ class FloatingHudManager(private val context: Context) {
 
         updateCounts(initialReels, initialSeconds)
 
-        val overlayType = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY
+        val overlayType = if (context is android.accessibilityservice.AccessibilityService) {
+            WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY
+        } else {
+            WindowManager.LayoutParams.TYPE_APPLICATION
+        }
 
         val displayMetrics = context.resources.displayMetrics
         val screenWidth = displayMetrics.widthPixels
@@ -60,8 +62,8 @@ class FloatingHudManager(private val context: Context) {
         val savedX = PreferencesManager.hudPositionX
         val savedY = PreferencesManager.hudPositionY
 
-        val startX = if (savedX >= 0) savedX else (screenWidth - 420)
-        val startY = if (savedY >= 0) savedY else 140
+        val startX = if (savedX >= 0) savedX else (screenWidth - 380)
+        val startY = if (savedY >= 0) savedY else 120
 
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT,
@@ -96,7 +98,7 @@ class FloatingHudManager(private val context: Context) {
                     if (isAttached && hudView != null) {
                         try {
                             windowManager.updateViewLayout(hudView, p)
-                        } catch (e: Exception) {
+                        } catch (_: Exception) {
                             // Layout might be transitioning
                         }
                     }
@@ -106,14 +108,8 @@ class FloatingHudManager(private val context: Context) {
                     val deltaX = abs(event.rawX - initialTouchX)
                     val deltaY = abs(event.rawY - initialTouchY)
                     if (deltaX < touchSlop && deltaY < touchSlop) {
-                        // Clicked pill HUD
-                        Toast.makeText(
-                            context,
-                            "BasKarBhai • Protected by mdx\nKeep scrolling and the roast gets harder!",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(context, "BasKarBhai is watching 👁️", Toast.LENGTH_SHORT).show()
                     } else {
-                        // Persist custom user position
                         PreferencesManager.hudPositionX = p.x
                         PreferencesManager.hudPositionY = p.y
                     }
@@ -135,9 +131,9 @@ class FloatingHudManager(private val context: Context) {
     fun updateCounts(reelCount: Int, activeSeconds: Long) {
         if (!isAttached || hudView == null) return
         try {
-            tvReels.text = "📜 $reelCount Reels"
-            tvTimer.text = "⏱️ ${TimeUtils.formatDurationMmSs(activeSeconds)}"
-        } catch (e: Exception) {
+            tvReels.text = "$reelCount"
+            tvTimer.text = TimeUtils.formatDurationMmSs(activeSeconds)
+        } catch (_: Exception) {
             // View may have unmounted
         }
     }
@@ -148,7 +144,7 @@ class FloatingHudManager(private val context: Context) {
         if (isAttached && hudView != null) {
             try {
                 windowManager.removeView(hudView)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 // Ignore removal error
             } finally {
                 isAttached = false

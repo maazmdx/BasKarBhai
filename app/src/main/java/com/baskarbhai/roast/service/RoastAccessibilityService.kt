@@ -1,6 +1,12 @@
 package com.baskarbhai.roast.service
 
 import android.accessibilityservice.AccessibilityService
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.graphics.Rect
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -12,21 +18,15 @@ import com.baskarbhai.roast.util.FilterUtils
 
 /**
  * Core AccessibilityService for BasKarBhai.
- * Features:
- *  - Compatible from Android 10 (API 29) to Android 14+ (API 34).
- *  - Zero-permission floating HUD and full-screen modal overlays via TYPE_ACCESSIBILITY_OVERLAY.
- *  - Smart Reels/Shorts filter detecting vertical pagers while filtering out Instagram DMs.
- *  - 1200ms scroll debounce.
- *  - Active session timer running every 1000ms while target app is active.
- *  - 10-minute session timeout reset.
- *  - 4 Escalation Tiers triggered by EITHER Reel Count OR Time.
- * Architected by maazmdx.
+ * Features strict scroll filtering, screen off dismissal, and rock-solid HUD lifecycle.
+ * Engineered by maazmdx.
  */
 class RoastAccessibilityService : AccessibilityService() {
 
     companion object {
         private const val TAG = "RoastAccessibility"
-        private const val SCROLL_DEBOUNCE_MS = 1200L
+        private const val SCROLL_DEBOUNCE_MS = 2000L
+        private const val SURFACE_ENTER_COOLDOWN_MS = 1200L
         private const val SESSION_TIMEOUT_MS = 10 * 60 * 1000L // 10 minutes
 
         const val PACKAGE_INSTAGRAM = "com.instagram.android"
@@ -46,6 +46,8 @@ class RoastAccessibilityService : AccessibilityService() {
     private var isTimerRunning = false
     private var lastScrollTimestamp = 0L
     private var lastLeaveTimestamp = 0L
+    private var enteredReelsTimestamp = 0L
+    private var isCurrentlyInReelsSurface = false
 
     var sessionReelCount = 0
         private set
@@ -54,17 +56,41 @@ class RoastAccessibilityService : AccessibilityService() {
     private var currentForegroundPackage: String? = null
     private var highestTierTriggered = 0
 
+    // Screen off receiver to immediately hide HUD when device is locked/screen turned off
+    private val screenReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == Intent.ACTION_SCREEN_OFF) {
+                Log.d(TAG, "Screen off detected — dismissing HUD immediately.")
+                handleLeftTargetApp()
+            }
+        }
+    }
+
     private val timerRunnable = object : Runnable {
         override fun run() {
-            if (isInTargetApp()) {
-                sessionActiveSeconds++
-                PreferencesManager.addDailySeconds(1L)
-                hudManager.updateCounts(sessionReelCount, sessionActiveSeconds)
-                checkMilestones()
-                mainHandler.postDelayed(this, 1000L)
-            } else {
-                isTimerRunning = false
+            if (!isInTargetApp()) {
+                handleLeftTargetApp()
+                return
             }
+
+            // Periodic sanity check: confirm active window package
+            val activePkg = try {
+                rootInActiveWindow?.packageName?.toString()
+            } catch (_: Exception) {
+                null
+            }
+
+            if (activePkg != null && !isInTargetApp(activePkg)) {
+                currentForegroundPackage = activePkg
+                handleLeftTargetApp()
+                return
+            }
+
+            sessionActiveSeconds++
+            PreferencesManager.addDailySeconds(1L)
+            hudManager.updateCounts(sessionReelCount, sessionActiveSeconds)
+            checkMilestones()
+            mainHandler.postDelayed(this, 1000L)
         }
     }
 
@@ -76,6 +102,13 @@ class RoastAccessibilityService : AccessibilityService() {
         hudManager = FloatingHudManager(this)
         modalManager = RoastModalManager(this) { actionId ->
             performGlobalAction(actionId)
+        }
+
+        try {
+            val filter = IntentFilter(Intent.ACTION_SCREEN_OFF)
+            registerReceiver(screenReceiver, filter)
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not register screen off receiver: ${e.message}")
         }
     }
 
@@ -89,7 +122,9 @@ class RoastAccessibilityService : AccessibilityService() {
                 handleWindowStateChanged(pkgName)
             }
             AccessibilityEvent.TYPE_VIEW_SCROLLED -> {
-                handleViewScrolled(pkgName)
+                if (isInTargetApp(pkgName)) {
+                    handleViewScrolled(pkgName, event)
+                }
             }
         }
     }
@@ -98,9 +133,8 @@ class RoastAccessibilityService : AccessibilityService() {
         val wasInTarget = isInTargetApp()
         currentForegroundPackage = pkgName
 
-        if (isInTargetApp()) {
+        if (isInTargetApp(pkgName)) {
             val now = System.currentTimeMillis()
-            // Check 10-minute session timeout
             if (lastLeaveTimestamp > 0 && (now - lastLeaveTimestamp > SESSION_TIMEOUT_MS)) {
                 Log.d(TAG, "Session timed out (>10m). Resetting session counters.")
                 resetSession()
@@ -118,36 +152,93 @@ class RoastAccessibilityService : AccessibilityService() {
             if (wasInTarget) {
                 lastLeaveTimestamp = System.currentTimeMillis()
             }
-            if (hudManager.isShowing() && !modalManager.isShowing()) {
-                hudManager.hide()
-            }
-            isTimerRunning = false
-            mainHandler.removeCallbacks(timerRunnable)
+            handleLeftTargetApp()
         }
     }
 
-    private fun handleViewScrolled(pkgName: String) {
-        if (!isInTargetApp(pkgName)) return
+    private fun handleLeftTargetApp() {
+        isCurrentlyInReelsSurface = false
+        isTimerRunning = false
+        mainHandler.removeCallbacks(timerRunnable)
 
+        if (hudManager.isShowing()) {
+            hudManager.hide()
+        }
+        if (modalManager.isShowing()) {
+            modalManager.hide()
+        }
+    }
+
+    private fun handleViewScrolled(pkgName: String, event: AccessibilityEvent) {
         val now = System.currentTimeMillis()
+
+        // 1. Debounce check
         if (now - lastScrollTimestamp < SCROLL_DEBOUNCE_MS) {
             return
         }
 
-        val rootNode = try {
-            rootInActiveWindow
-        } catch (e: Exception) {
-            null
+        // 2. Class check: must be a pager/recycler view
+        val sourceClassName = event.className?.toString().orEmpty()
+        val isLikelyPager = sourceClassName.contains("RecyclerView") ||
+                sourceClassName.contains("ViewPager")
+
+        if (!isLikelyPager) return
+
+        // 3. Inspect source view physical bounds
+        val sourceNode = try { event.source } catch (_: Exception) { null }
+        if (sourceNode != null) {
+            val bounds = Rect()
+            sourceNode.getBoundsInScreen(bounds)
+            val displayMetrics = resources.displayMetrics
+            val screenHeight = displayMetrics.heightPixels
+            val screenWidth = displayMetrics.widthPixels
+
+            // The main Reels/Shorts pager MUST occupy at least 65% of screen height and 70% width
+            // This discards comments sheets, horizontal tag carousels, and caption popups
+            if (bounds.height() < screenHeight * 0.65f || bounds.width() < screenWidth * 0.70f) {
+                return
+            }
+
+            // On Android 28+ (Android 10+), check vertical movement
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                if (event.scrollDeltaY == 0 && event.fromIndex == -1 && event.scrollY == 0) {
+                    // Static layout pass, no real scroll
+                    return
+                }
+            }
         }
 
-        if (FilterUtils.isReelsOrShortsSurface(rootNode, pkgName)) {
-            lastScrollTimestamp = now
-            sessionReelCount++
-            PreferencesManager.incrementDailyReels()
+        // 4. Verify full window hierarchy is genuinely Reels/Shorts
+        val rootNode = try { rootInActiveWindow } catch (_: Exception) { null }
+        val isConfirmedReels = FilterUtils.isReelsOrShortsSurface(rootNode, pkgName)
 
-            hudManager.updateCounts(sessionReelCount, sessionActiveSeconds)
-            checkMilestones()
+        if (!isConfirmedReels) {
+            isCurrentlyInReelsSurface = false
+            return
         }
+
+        // First transition onto Reels surface: give 1200ms grace period for initial viewpager layout
+        if (!isCurrentlyInReelsSurface) {
+            isCurrentlyInReelsSurface = true
+            enteredReelsTimestamp = now
+            lastScrollTimestamp = now // prevent counting the initial mount
+            Log.d(TAG, "Entered Reels surface. Starting grace cooldown.")
+            return
+        }
+
+        // In grace cooldown period: discard layout pre-caching
+        if (now - enteredReelsTimestamp < SURFACE_ENTER_COOLDOWN_MS) {
+            return
+        }
+
+        // Confirmed genuine user swipe!
+        lastScrollTimestamp = now
+        sessionReelCount++
+        PreferencesManager.incrementDailyReels()
+
+        Log.d(TAG, "Reel counted: #$sessionReelCount for $pkgName")
+        hudManager.updateCounts(sessionReelCount, sessionActiveSeconds)
+        checkMilestones()
     }
 
     private fun checkMilestones() {
@@ -195,6 +286,7 @@ class RoastAccessibilityService : AccessibilityService() {
         sessionReelCount = 0
         sessionActiveSeconds = 0L
         highestTierTriggered = 0
+        isCurrentlyInReelsSurface = false
         hudManager.updateCounts(0, 0L)
     }
 
@@ -207,6 +299,9 @@ class RoastAccessibilityService : AccessibilityService() {
         instance = null
         isTimerRunning = false
         mainHandler.removeCallbacks(timerRunnable)
+        try {
+            unregisterReceiver(screenReceiver)
+        } catch (_: Exception) {}
         hudManager.hide()
         modalManager.hide()
         Log.i(TAG, "BasKarBhai RoastAccessibilityService destroyed.")

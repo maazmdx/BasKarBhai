@@ -9,7 +9,7 @@ import java.util.Locale
 /**
  * Manages local persistence for stats, user credentials, and escalation thresholds.
  * Automatically handles daily statistics roll-over.
- * Engineered by mdx.
+ * Engineered by maazmdx.
  */
 object PreferencesManager {
 
@@ -127,15 +127,14 @@ object PreferencesManager {
         val reelsKey = "tier_${level}_reels"
         val minsKey = "tier_${level}_mins"
         val captionKey = "tier_${level}_caption"
-        val memeKey = "tier_${level}_meme"
 
         return TierConfig(
             tierLevel = level,
             title = defaults.title,
             caption = prefs.getString(captionKey, defaults.caption) ?: defaults.caption,
+            speechText = defaults.speechText,
             defaultReelThreshold = prefs.getInt(reelsKey, defaults.defaultReelThreshold),
             defaultMinuteThreshold = prefs.getInt(minsKey, defaults.defaultMinuteThreshold),
-            memeUrl = prefs.getString(memeKey, defaults.memeUrl) ?: defaults.memeUrl,
             fallbackDrawableRes = defaults.fallbackDrawableRes
         )
     }
@@ -146,7 +145,6 @@ object PreferencesManager {
             .putInt("tier_${level}_reels", config.defaultReelThreshold)
             .putInt("tier_${level}_mins", config.defaultMinuteThreshold)
             .putString("tier_${level}_caption", config.caption)
-            .putString("tier_${level}_meme", config.memeUrl)
             .apply()
     }
 }

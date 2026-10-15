@@ -1,163 +1,166 @@
 package com.baskarbhai.roast.util
 
+import android.util.Log
 import android.view.accessibility.AccessibilityNodeInfo
 
 /**
- * Intelligent filter for detecting Instagram Reels and YouTube Shorts surfaces
- * while ignoring DM threads, inbox scrolls, feeds, and normal videos.
- * Engineered by mdx.
+ * Strict, robust filter for detecting Instagram Reels and YouTube Shorts surfaces.
+ * Filters out DM chats, explore feeds, home timelines, standard videos, and comments.
+ * Engineered by maazmdx.
  */
 object FilterUtils {
 
+    private const val TAG = "FilterUtils"
     private const val PACKAGE_INSTAGRAM = "com.instagram.android"
     private const val PACKAGE_YOUTUBE = "com.google.android.youtube"
 
-    // Instagram DM markers that strictly invalidate counting
-    private val INSTAGRAM_DM_IDENTIFIERS = listOf(
-        "direct_thread",
-        "direct_inbox",
-        "direct_chat",
-        "message_composer",
-        "direct_message",
-        "row_inbox",
-        "direct_private",
-        "direct_tab",
-        "thread_title"
+    // Instagram DM markers — reject immediately
+    private val INSTAGRAM_DM_MARKERS = setOf(
+        "direct_thread", "direct_inbox", "direct_chat",
+        "message_composer", "direct_message", "row_inbox",
+        "direct_private", "direct_tab", "thread_title",
+        "inbox_fragment", "direct_reply", "message_thread",
+        "row_thread", "direct_voice_record"
     )
 
-    // Markers indicating Reels surface
-    private val REELS_IDENTIFIERS = listOf(
-        "reel_viewer",
-        "clips_video_container",
-        "reel_main_container",
-        "clips_viewer",
-        "clips_media_item",
-        "clips_root",
-        "reel_swipe",
-        "reel_animator"
+    // Instagram non-reels surfaces to reject
+    private val INSTAGRAM_REJECT_MARKERS = setOf(
+        "explore_grid", "feed_timeline", "profile_tab",
+        "action_bar_container", "search_edit_text",
+        "story_viewer", "media_group", "comment_composer"
     )
 
-    // Markers indicating YouTube Shorts surface
-    private val SHORTS_IDENTIFIERS = listOf(
-        "shorts_player",
-        "reel_recycler_view",
-        "shorts_container",
-        "reel_player_fragment",
-        "reel_watch_fragment",
-        "shorts_shelf_item",
-        "shorts_video_player"
+    // Instagram Reels-specific markers
+    private val INSTAGRAM_REELS_IDS = setOf(
+        "clips_viewer", "clips_video_container",
+        "clips_media_item", "clips_root", "reel_viewer",
+        "reel_swipe", "reel_animator", "reel_main_container",
+        "clips_tab", "clips_surface", "clips_touch_container"
+    )
+
+    // YouTube Shorts-specific markers
+    private val YOUTUBE_SHORTS_IDS = setOf(
+        "shorts_player", "reel_recycler_view",
+        "shorts_container", "reel_player_fragment",
+        "reel_watch_fragment", "shorts_video_player",
+        "shorts_shelf_item"
+    )
+
+    private val PAGER_CLASS_PATTERNS = setOf(
+        "ViewPager", "ViewPager2", "RecyclerView"
     )
 
     /**
-     * Inspects the view hierarchy to determine if the active window is genuinely a Reels/Shorts screen.
+     * Determines if the active window is genuinely a full-screen vertical Reels/Shorts player.
+     * Rejects DMs and non-reels surfaces, and confirms both pager and reels markers.
      */
     fun isReelsOrShortsSurface(rootNode: AccessibilityNodeInfo?, packageName: String?): Boolean {
         if (rootNode == null || packageName == null) return false
+        if (packageName != PACKAGE_INSTAGRAM && packageName != PACKAGE_YOUTUBE) return false
 
-        // 1. Guard against Instagram DMs
-        if (packageName == PACKAGE_INSTAGRAM && isInstagramDmSurface(rootNode)) {
-            return false
+        // Fast path 1: Reject DMs by native text / ID search
+        if (packageName == PACKAGE_INSTAGRAM) {
+            val dmSendNodes = rootNode.findAccessibilityNodeInfosByText("Message...")
+            if (dmSendNodes.isNotEmpty()) {
+                dmSendNodes.forEach { try { it.recycle() } catch (_: Exception) {} }
+                return false
+            }
         }
 
-        // 2. Perform deep inspection for full-screen vertical pagers & Reels/Shorts nodes
-        var hasVerticalPagerNode = false
-        var hasReelsOrShortsMarker = false
+        // Fast path 2: Direct view ID match for known primary viewpagers
+        val primaryIds = if (packageName == PACKAGE_INSTAGRAM) {
+            listOf(
+                "com.instagram.android:id/clips_viewer_view_pager",
+                "com.instagram.android:id/clips_video_container",
+                "com.instagram.android:id/clips_root"
+            )
+        } else {
+            listOf(
+                "com.google.android.youtube:id/shorts_player",
+                "com.google.android.youtube:id/reel_recycler_view"
+            )
+        }
 
-        val nodesToVisit = ArrayDeque<Pair<AccessibilityNodeInfo, Int>>()
-        nodesToVisit.add(Pair(rootNode, 0))
-        var visitedCount = 0
-        val maxNodes = 120
-
-        while (nodesToVisit.isNotEmpty() && visitedCount < maxNodes) {
-            val (current, depth) = nodesToVisit.removeFirst()
-            visitedCount++
-
-            val className = current.className?.toString().orEmpty()
-            val viewId = current.viewIdResourceName?.lowercase().orEmpty()
-            val contentDesc = current.contentDescription?.toString().orEmpty().lowercase()
-            val text = current.text?.toString().orEmpty().lowercase()
-
-            // Check for vertical pager components
-            if (className.contains("ViewPager") ||
-                className.contains("RecyclerView") ||
-                current.isScrollable
-            ) {
-                hasVerticalPagerNode = true
-            }
-
-            // Check for Instagram Reels markers
-            if (packageName == PACKAGE_INSTAGRAM) {
-                if (REELS_IDENTIFIERS.any { viewId.contains(it) } ||
-                    contentDesc.contains("reels") ||
-                    text.contains("reels") ||
-                    contentDesc.contains("audio used") ||
-                    contentDesc.contains("original audio")
-                ) {
-                    hasReelsOrShortsMarker = true
-                }
-            }
-
-            // Check for YouTube Shorts markers
-            if (packageName == PACKAGE_YOUTUBE) {
-                if (SHORTS_IDENTIFIERS.any { viewId.contains(it) } ||
-                    contentDesc.contains("shorts") ||
-                    text.contains("shorts") ||
-                    contentDesc.contains("remix this video") ||
-                    viewId.contains("reel")
-                ) {
-                    hasReelsOrShortsMarker = true
-                }
-            }
-
-            if (hasVerticalPagerNode && hasReelsOrShortsMarker) {
+        for (id in primaryIds) {
+            val matched = rootNode.findAccessibilityNodeInfosByViewId(id)
+            if (matched.isNotEmpty()) {
+                matched.forEach { try { it.recycle() } catch (_: Exception) {} }
+                Log.d(TAG, "Fast confirmed $packageName Reels surface via $id")
                 return true
             }
-
-            // Traverse children up to max depth of 12
-            if (depth < 12) {
-                for (i in 0 until current.childCount) {
-                    val child = current.getChild(i)
-                    if (child != null) {
-                        nodesToVisit.add(Pair(child, depth + 1))
-                    }
-                }
-            }
         }
 
-        // Fallback: If strong marker is found, consider it active
-        return hasReelsOrShortsMarker
-    }
+        // Deep BFS search with high node limit for modern complex hierarchies
+        var hasPagerNode = false
+        var hasReelsShortsMarker = false
 
-    private fun isInstagramDmSurface(rootNode: AccessibilityNodeInfo): Boolean {
         val queue = ArrayDeque<Pair<AccessibilityNodeInfo, Int>>()
         queue.add(Pair(rootNode, 0))
-        var count = 0
+        var visitCount = 0
+        val maxVisit = 280
 
-        while (queue.isNotEmpty() && count < 60) {
+        while (queue.isNotEmpty() && visitCount < maxVisit) {
             val (node, depth) = queue.removeFirst()
-            count++
+            visitCount++
 
+            val className = node.className?.toString().orEmpty()
             val viewId = node.viewIdResourceName?.lowercase().orEmpty()
             val contentDesc = node.contentDescription?.toString().orEmpty().lowercase()
-            val text = node.text?.toString().orEmpty().lowercase()
 
-            if (INSTAGRAM_DM_IDENTIFIERS.any { viewId.contains(it) } ||
-                text.contains("direct") ||
-                contentDesc.contains("send message") ||
-                contentDesc.contains("message...")
-            ) {
+            // Strict DM & non-reels rejection
+            if (packageName == PACKAGE_INSTAGRAM) {
+                if (INSTAGRAM_DM_MARKERS.any { viewId.contains(it) } ||
+                    contentDesc.contains("send message") ||
+                    contentDesc.contains("message...")
+                ) {
+                    return false
+                }
+                if (INSTAGRAM_REJECT_MARKERS.any { viewId.contains(it) }) {
+                    return false
+                }
+            }
+
+            // Check for vertical pager
+            if (PAGER_CLASS_PATTERNS.any { className.contains(it) } && node.isScrollable) {
+                hasPagerNode = true
+            }
+
+            // Check for Reels/Shorts markers
+            if (packageName == PACKAGE_INSTAGRAM) {
+                if (INSTAGRAM_REELS_IDS.any { viewId.contains(it) } ||
+                    contentDesc == "reels" ||
+                    contentDesc.startsWith("reel by")
+                ) {
+                    hasReelsShortsMarker = true
+                }
+            } else if (packageName == PACKAGE_YOUTUBE) {
+                if (YOUTUBE_SHORTS_IDS.any { viewId.contains(it) } ||
+                    viewId.contains("reel") ||
+                    contentDesc == "shorts"
+                ) {
+                    hasReelsShortsMarker = true
+                }
+            }
+
+            if (hasPagerNode && hasReelsShortsMarker) {
+                Log.d(TAG, "Confirmed Reels/Shorts surface for $packageName")
                 return true
             }
 
-            if (depth < 8) {
+            if (depth < 12) {
                 for (i in 0 until node.childCount) {
-                    val child = node.getChild(i)
-                    if (child != null) {
-                        queue.add(Pair(child, depth + 1))
+                    try {
+                        val child = node.getChild(i)
+                        if (child != null) {
+                            queue.add(Pair(child, depth + 1))
+                        }
+                    } catch (_: Exception) {
+                        // Node recycled
                     }
                 }
             }
         }
-        return false
+
+        return hasPagerNode && hasReelsShortsMarker
     }
 }

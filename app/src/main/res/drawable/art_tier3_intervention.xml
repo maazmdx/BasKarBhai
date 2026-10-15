@@ -1,0 +1,44 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="260dp"
+    android:height="180dp"
+    android:viewportWidth="260"
+    android:viewportHeight="180">
+
+    <!-- Dark High-Tech Background Plate -->
+    <path
+        android:fillColor="#0D1117"
+        android:pathData="M12,8 h236 a12,12 0 0 1 12,12 v140 a12,12 0 0 1 -12,12 h-236 a12,12 0 0 1 -12,-12 v-140 a12,12 0 0 1 12,-12 z" />
+
+    <!-- Grid Lines -->
+    <path
+        android:strokeColor="#27272A"
+        android:strokeWidth="1"
+        android:pathData="M20,50 h220 M20,90 h220 M20,130 h220 M70,16 v148 M130,16 v148 M190,16 v148" />
+
+    <!-- Emergency Shield Outer Frame -->
+    <path
+        android:strokeColor="#FF1744"
+        android:strokeWidth="3.5"
+        android:pathData="M130,24 L186,48 v46 c0,38 -24,58 -56,66 c-32,-8 -56,-28 -56,-66 v-46 Z" />
+
+    <!-- Emergency Shield Fill -->
+    <path
+        android:fillColor="#1A1820"
+        android:pathData="M130,28 L182,50 v44 c0,35 -22,54 -52,62 c-30,-8 -52,-27 -52,-62 v-44 Z" />
+
+    <!-- Emergency Hand / Halt Icon -->
+    <path
+        android:fillColor="#FF1744"
+        android:pathData="M112,62 h7 v24 h-7 z M123,54 h7 v32 h-7 z M134,58 h7 v28 h-7 z M145,66 h7 v20 h-7 z M103,78 h7 v12 h-7 z M108,90 c0,16 12,24 24,24 s22,-8 22,-24 v-6 h-46 z" />
+
+    <!-- Shockwave Energy Arcs -->
+    <path
+        android:strokeColor="#FF9100"
+        android:strokeWidth="2.5"
+        android:pathData="M52,60 c-12,18 -12,42 0,60 M208,60 c12,18 12,42 0,60" />
+
+    <!-- Warning Chevrons -->
+    <path
+        android:fillColor="#FF5252"
+        android:pathData="M32,22 l10,8 l-10,8 h6 l10,-8 l-10,-8 z M222,22 l10,8 l-10,8 h6 l10,-8 l-10,-8 z" />
+</vector>

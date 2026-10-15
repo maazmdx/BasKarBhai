@@ -5,54 +5,55 @@ import com.baskarbhai.roast.R
 
 /**
  * Definition of an Escalation Tier for BasKarBhai.
- * Architected by maazmdx.
+ * Features vector graphics and synchronized TextToSpeech voice roasts.
+ * Engineered by maazmdx.
  */
 data class TierConfig(
     val tierLevel: Int,
     val title: String,
     val caption: String,
+    val speechText: String,
     val defaultReelThreshold: Int,
     val defaultMinuteThreshold: Int,
-    val memeUrl: String,
     @DrawableRes val fallbackDrawableRes: Int
 ) {
     companion object {
         fun getDefaultTiers(): List<TierConfig> = listOf(
             TierConfig(
                 tierLevel = 1,
-                title = "What Are You Doing?",
-                caption = "10 reels watched already! Stop scrolling and do something productive!",
+                title = "REALITY CHECK",
+                caption = "You've scrolled through 10 reels back-to-back.\nThat’s pure dopamine fog. Look up, take a breath, and put the phone down.",
+                speechText = "Reality check! You have watched 10 reels. Put the phone down right now.",
                 defaultReelThreshold = 10,
                 defaultMinuteThreshold = 5,
-                memeUrl = "https://media.giphy.com/media/AGGcmjQuwPHvvE6v08/giphy.gif",
-                fallbackDrawableRes = R.drawable.meme_tier1_ashneer
+                fallbackDrawableRes = R.drawable.art_tier1_reality_check
             ),
             TierConfig(
                 tierLevel = 2,
-                title = "Focus On What Matters!",
-                caption = "25 reels in! Put down the phone, build your future and reclaim your focus!",
+                title = "DOOMSCROLL DETECTED",
+                caption = "25 reels deep into the algorithm.\nYou could've finished a workout, read a chapter, or gone outside.\nSnap out of it.",
+                speechText = "Doomscroll alert! 25 reels wasted. Close the app and touch some grass.",
                 defaultReelThreshold = 25,
                 defaultMinuteThreshold = 12,
-                memeUrl = "https://media.giphy.com/media/26ufcVAp3AiJJsrIs/giphy.gif",
-                fallbackDrawableRes = R.drawable.meme_tier2_ias
+                fallbackDrawableRes = R.drawable.art_tier2_doomscroll
             ),
             TierConfig(
                 tierLevel = 3,
-                title = "Wait! Hold Up!",
-                caption = "40 reels watched! Exiting Reels player right now to save your attention!",
+                title = "SYSTEM INTERVENTION",
+                caption = "40 reels burned! Emergency brake engaged.\nWe are ejecting you back to your feed right now.\nStop negotiating with the algorithm.",
+                speechText = "System intervention! 40 reels in. Pulling the emergency brake now.",
                 defaultReelThreshold = 40,
                 defaultMinuteThreshold = 20,
-                memeUrl = "https://media.giphy.com/media/3o7bu12GHm4G5MI7UW/giphy.gif",
-                fallbackDrawableRes = R.drawable.meme_tier3_bhau
+                fallbackDrawableRes = R.drawable.art_tier3_intervention
             ),
             TierConfig(
                 tierLevel = 4,
-                title = "Game Over! Bye-Bye!",
-                caption = "60 Reels / 30 Minutes reached! Closing to Home Screen and notifying your group chat!",
+                title = "TOTAL LOCKOUT",
+                caption = "60 reels and 30 minutes lost to the void.\nEjecting to Home Screen immediately.\nAlerting your Discord or Telegram webhook. It's over.",
+                speechText = "Total lockout! 60 reels burned. Ejecting to home screen.",
                 defaultReelThreshold = 60,
                 defaultMinuteThreshold = 30,
-                memeUrl = "https://media.giphy.com/media/ISOckXUybVfQ4/giphy.gif",
-                fallbackDrawableRes = R.drawable.meme_tier4_tata
+                fallbackDrawableRes = R.drawable.art_tier4_lockdown
             )
         )
     }

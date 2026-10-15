@@ -1,0 +1,49 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="260dp"
+    android:height="180dp"
+    android:viewportWidth="260"
+    android:viewportHeight="180">
+
+    <!-- Dark High-Tech Background Plate -->
+    <path
+        android:fillColor="#0D1117"
+        android:pathData="M12,8 h236 a12,12 0 0 1 12,12 v140 a12,12 0 0 1 -12,12 h-236 a12,12 0 0 1 -12,-12 v-140 a12,12 0 0 1 12,-12 z" />
+
+    <!-- Grid Lines -->
+    <path
+        android:strokeColor="#1F2937"
+        android:strokeWidth="1"
+        android:pathData="M20,50 h220 M20,90 h220 M20,130 h220 M70,16 v148 M130,16 v148 M190,16 v148" />
+
+    <!-- Glowing Hexagonal Outer Shield -->
+    <path
+        android:strokeColor="#FF6D00"
+        android:strokeWidth="3"
+        android:pathData="M130,30 L180,60 L180,120 L130,150 L80,120 L80,60 Z" />
+
+    <!-- Eye / Reality Check Aperture -->
+    <path
+        android:fillColor="#FF3D00"
+        android:pathData="M130,58 c-32,0 -54,32 -54,32 s22,32 54,32 s54,-32 54,-32 s-22,-32 -54,-32 z" />
+
+    <!-- Pupil / Iris -->
+    <path
+        android:fillColor="#0D1117"
+        android:pathData="M130,72 a18,18 0 1 0 0,36 a18,18 0 1 0 0,-36 z" />
+
+    <!-- Glow Core -->
+    <path
+        android:fillColor="#FFD600"
+        android:pathData="M130,82 a8,8 0 1 0 0,16 a8,8 0 1 0 0,-16 z" />
+
+    <!-- Awareness Pulse Rays -->
+    <path
+        android:strokeColor="#FFAB00"
+        android:strokeWidth="2.5"
+        android:pathData="M52,90 h18 M190,90 h18 M130,20 v12 M130,148 v12" />
+
+    <!-- Tier 1 Status Accent -->
+    <path
+        android:fillColor="#FF6D00"
+        android:pathData="M24,20 h40 v4 h-40 z M196,20 h40 v4 h-40 z" />
+</vector>

@@ -6,57 +6,50 @@
     android:orientation="horizontal"
     android:background="@drawable/bg_hud_pill"
     android:gravity="center_vertical"
-    android:elevation="8dp"
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp"
+    android:elevation="12dp"
     android:clickable="true"
     android:focusable="true">
 
     <!-- Flame Icon -->
     <ImageView
         android:id="@+id/hudFlameIcon"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
         android:src="@drawable/ic_flame"
         android:contentDescription="@string/app_name"
-        android:layout_marginEnd="6dp" />
+        android:layout_marginEnd="5dp" />
 
     <!-- Reel Counter -->
     <TextView
         android:id="@+id/tvReelCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="📜 0 Reels"
-        android:textColor="@color/text_primary"
+        android:text="0"
+        android:textColor="#F0F6FC"
         android:textSize="12sp"
         android:textStyle="bold"
         android:fontFamily="sans-serif-medium" />
 
     <!-- Separator -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="  |  "
-        android:textColor="@color/text_secondary"
-        android:textSize="12sp"
-        android:textStyle="bold" />
+    <View
+        android:layout_width="1dp"
+        android:layout_height="12dp"
+        android:background="#40FFFFFF"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="7dp" />
 
     <!-- Timer -->
     <TextView
         android:id="@+id/tvActiveTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="⏱️ 00:00"
-        android:textColor="@color/accent_cyan"
+        android:text="00:00"
+        android:textColor="#00E5FF"
         android:textSize="12sp"
         android:textStyle="bold"
         android:fontFamily="sans-serif-medium" />
-
-    <!-- Author tag indicator -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=" • maazmdx"
-        android:textColor="#80FF5722"
-        android:textSize="9sp"
-        android:textStyle="bold"
-        android:layout_marginStart="4dp" />
 </LinearLayout>

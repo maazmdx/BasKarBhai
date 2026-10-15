@@ -64,6 +64,19 @@ object WebhookHelper {
         sendPayload(webhookUrl, safeNickname, message, callback)
     }
 
+    fun sendDoomscrollAlert(
+        webhookUrl: String,
+        nickname: String,
+        platform: String,
+        tier: Int,
+        reelsCount: Int,
+        durationSeconds: Long,
+        callback: WebhookCallback? = null
+    ) {
+        val durationStr = "${durationSeconds / 60}m ${durationSeconds % 60}s"
+        sendTier4SnitchAlert(webhookUrl, nickname, reelsCount, durationStr, platform, callback)
+    }
+
     /**
      * Sends a test ping to verify webhook connectivity.
      */

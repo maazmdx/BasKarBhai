@@ -12,7 +12,7 @@ import com.baskarbhai.roast.R
 
 /**
  * Interactive Dialog explaining how to bypass Android 13/14 Restricted Settings.
- * Engineered by mdx.
+ * Engineered by maazmdx.
  */
 class RestrictedSettingsDialog(context: Context) : Dialog(context, R.style.Theme_BasKarBhai_Dialog) {
 

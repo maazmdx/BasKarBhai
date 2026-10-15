@@ -39,14 +39,14 @@
     <string name="test_hud_btn">Test Floating HUD Overlay</string>
 
     <!-- Tier Defaults -->
-    <string name="tier1_title">Tier 1: What Are You Doing?</string>
-    <string name="tier1_default_caption">10 reels watched already! Stop scrolling and do something productive!</string>
-    <string name="tier2_title">Tier 2: Focus On What Matters!</string>
-    <string name="tier2_default_caption">25 reels in! Put down the phone, build your future and reclaim your focus!</string>
-    <string name="tier3_title">Tier 3: Wait! Hold Up!</string>
-    <string name="tier3_default_caption">40 reels watched! Exiting Reels player right now to save your attention!</string>
-    <string name="tier4_title">Tier 4: Game Over! Bye-Bye!</string>
-    <string name="tier4_default_caption">60 Reels / 30 Minutes reached! Closing to Home Screen and notifying your group chat!</string>
+    <string name="tier1_title">Tier 1: Reality Check</string>
+    <string name="tier1_default_caption">You\'ve scrolled through 10 reels back-to-back. That’s pure dopamine fog. Look up, take a breath, and put the phone down.</string>
+    <string name="tier2_title">Tier 2: Doomscroll Detected</string>
+    <string name="tier2_default_caption">25 reels deep into the algorithm. You could\'ve finished a workout, read a chapter, or gone outside. Snap out of it.</string>
+    <string name="tier3_title">Tier 3: System Intervention</string>
+    <string name="tier3_default_caption">40 reels burned! Emergency brake engaged. We are ejecting you back to your feed right now. Stop negotiating with the algorithm.</string>
+    <string name="tier4_title">Tier 4: Total Lockout</string>
+    <string name="tier4_default_caption">60 reels and 30 minutes lost to the void. Ejecting to Home Screen immediately. Alerting your friends. It\'s over.</string>
 
     <string name="dismiss_locked_countdown">Patience… (%d)</string>
     <string name="dismiss_tap_remaining">Tap %d more times to dismiss!</string>
